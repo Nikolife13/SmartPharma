@@ -1,18 +1,19 @@
-﻿# SmartPharma 💊
+# SmartPharma 💊
+
 **Automated Inventory and Predictive Ordering for Pharmacies**
 
-Веб-приложение для независимых аптек: учёт запасов, прогнозирование заказов с ML.
+A web application for independent pharmacies: inventory tracking and machine learning forecast of purchase orders.
 
-## 🚀 Стек
+## 🚀 Tech Stack
 - **Frontend:** React.js, Tailwind CSS, Chart.js
 - **Backend:** Java 17, Spring Boot, Spring Security + JWT, MySQL
-- **ML-сервис:** Python 3, FastAPI, scikit-learn, pandas
+- **ML service:** Python 3, FastAPI, scikit-learn, pandas
 
-## 📁 Структура
-- rontend-react/ — интерфейс пользователя
-- ackend-java/ — основной REST API и бизнес-логика
-- ml-service-python/ — микросервис предсказаний
+## 📁 Project Structure
+- `frontend-react/` — user interface
+- `backend-java/` — core REST API and business logic
+- `ml-service-python/` — predictive analytics microservice
 
-## 🎓 Учебный проект
-National College of Ireland, HDSDEV_SEP25
-**Автор:** Vitalii Nikitenko (24158852)
+## 🎓 Academic Project
+National College of Ireland, HDSDEV_SEP25  
+**Author:** Vitalii Nikitenko (24158852)
