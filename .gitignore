@@ -1,0 +1,30 @@
+﻿# IDE
+.idea/
+.vscode/
+*.swp
+*.suo
+*.user
+
+# Java / Spring Boot
+target/
+*.class
+*.jar
+*.war
+.mvn/
+
+# React / Node.js
+node_modules/
+build/
+dist/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+.pytest_cache/
+
+# OS Files
+.DS_Store
+Thumbs.db
