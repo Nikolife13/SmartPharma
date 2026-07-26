@@ -32,15 +32,27 @@ public class AuthService {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
+        User.Role role = User.Role.PHARMACIST;
+        if (request.getRole() != null && !request.getRole().isBlank()) {
+            try {
+                role = User.Role.valueOf(request.getRole().trim().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Invalid role: " + request.getRole());
+            }
+        }
+
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        // Default role: PHARMACIST, unless specified as MANAGER
-        user.setRole(User.Role.PHARMACIST);
+        user.setEmail(request.getEmail());
+        user.setRole(role);
+        if (role == User.Role.SUPPLIER) {
+            user.setSupplierStatus(User.SupplierStatus.PENDING);
+        }
         userRepository.save(user);
 
         String token = jwtUtil.generateToken(user.getUsername());
-        return new LoginResponse(token, user.getUsername(), user.getRole().name());
+        return toLoginResponse(user, token);
     }
 
     /**
@@ -53,6 +65,11 @@ public class AuthService {
             throw new RuntimeException("Bad credentials");
         }
         String token = jwtUtil.generateToken(user.getUsername());
-        return new LoginResponse(token, user.getUsername(), user.getRole().name());
+        return toLoginResponse(user, token);
+    }
+
+    private LoginResponse toLoginResponse(User user, String token) {
+        String supplierStatus = user.getSupplierStatus() != null ? user.getSupplierStatus().name() : null;
+        return new LoginResponse(token, user.getUsername(), user.getRole().name(), supplierStatus);
     }
 }
