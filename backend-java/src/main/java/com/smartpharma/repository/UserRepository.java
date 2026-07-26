@@ -2,6 +2,7 @@ package com.smartpharma.repository;
 
 import com.smartpharma.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,4 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * Check if a username already exists (used during registration).
      */
     boolean existsByUsername(String username);
+
+    List<User> findByRole(User.Role role);
+
+    List<User> findByRoleAndSupplierStatus(User.Role role, User.SupplierStatus supplierStatus);
 }
