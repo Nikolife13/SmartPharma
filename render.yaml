@@ -1,0 +1,79 @@
+# Render Blueprint for SmartPharma.
+#
+# Deploy: Render dashboard -> New -> Blueprint -> point at this repo.
+# Render provisions all 4 services below together as one new project.
+#
+# NOTE on service names: smartpharma-backend / smartpharma-ml / smartpharma-frontend
+# get public URLs of the form https://<name>.onrender.com. Those exact strings are
+# used literally below (ML_SERVICE_URL, ALLOWED_ORIGINS, VITE_API_BASE_URL) because
+# Render Blueprint's fromService injects only a bare hostname, not a full https://
+# URL. Render subdomains are global, so if any of these three names are already
+# taken by someone else, rename the service and update the matching literal(s)
+# below (and in the Render dashboard after first deploy).
+#
+# The MySQL service is a paid "starter" plan - only a persistent disk requires a
+# paid plan; the disk is what makes the database survive restarts/redeploys.
+
+services:
+  - type: pserv
+    name: smartpharma-mysql
+    runtime: image
+    plan: starter
+    image:
+      url: docker.io/library/mysql:8.0
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: smartpharma
+    disk:
+      name: mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1
+
+  - type: web
+    name: smartpharma-ml
+    runtime: docker
+    rootDir: ./ml-service-python
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+
+  - type: web
+    name: smartpharma-backend
+    runtime: docker
+    rootDir: ./backend-java
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: DB_HOST
+        fromService:
+          name: smartpharma-mysql
+          type: pserv
+          property: host
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_NAME
+        value: smartpharma
+      - key: DB_USER
+        value: root
+      - key: DB_PASSWORD
+        fromService:
+          name: smartpharma-mysql
+          type: pserv
+          envVarKey: MYSQL_ROOT_PASSWORD
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ML_SERVICE_URL
+        value: https://smartpharma-ml.onrender.com
+      - key: ALLOWED_ORIGINS
+        value: https://smartpharma-frontend.onrender.com
+
+  - type: web
+    name: smartpharma-frontend
+    runtime: static
+    rootDir: ./frontend-react
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://smartpharma-backend.onrender.com/api
