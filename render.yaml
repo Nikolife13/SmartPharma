@@ -77,3 +77,7 @@ services:
     envVars:
       - key: VITE_API_BASE_URL
         value: https://smartpharma-backend.onrender.com/api
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
