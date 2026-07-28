@@ -1,0 +1,15 @@
+package com.smartpharma.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MlDailySale {
+    private LocalDate date;
+    private Integer quantity;
+}
