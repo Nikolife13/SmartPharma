@@ -15,3 +15,11 @@ export const productService = {
 export const dashboardService = {
   getSummary: () => api.get('/dashboard'),
 };
+
+export const ordersService = {
+  getSuggestions: () => api.get('/orders/suggestions'),
+};
+
+export const analyticsService = {
+  getSummary: (period) => api.get('/analytics/summary', { params: { period } }),
+};
