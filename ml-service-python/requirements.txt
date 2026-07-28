@@ -6,3 +6,4 @@ numpy
 faker
 joblib
 pydantic
+pymysql

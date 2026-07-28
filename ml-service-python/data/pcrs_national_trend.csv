@@ -1,0 +1,24 @@
+# Source: HSE PCRS Annual Reporting Portal (public, no login required)
+# https://www.sspcrs.ie/portal/annual-reporting/report/pharmacy -> "Top 100 Prescribing Products" (Monthly), Scheme Type = GMS
+# Collected manually on 2026-07-23 and 2026-07-28. National aggregate data for the Republic of Ireland (GMS
+# scheme only) - NOT this pharmacy's own sales. Used only as a relative demand-weight between drugs, not as a
+# multi-month time series (the portal's month picker could not be reliably automated for more than one period,
+# so all rows below are the same period: November 2024).
+# A product absent from this list (e.g. Ibuprofen, Metformin) simply wasn't captured in the top 30 of this one
+# snapshot - it is handled as a flat weight (1.0) in the generator, not treated as "zero demand".
+year_month,product_name,ranking_position,prescribing_frequency
+202411,Atorvastatin,1,212009
+202411,Levothyroxine Sodium,2,176591
+202411,Colecalciferol,3,175631
+202411,Esomeprazole,4,161235
+202411,Paracetamol,5,157856
+202411,Acetylsalicylic Acid,6,148404
+202411,Bisoprolol,7,129439
+202411,Rosuvastatin,9,102986
+202411,Salbutamol (Inhaled),10,99780
+202411,Pantoprazole,11,94001
+202411,Amlodipine,12,83819
+202411,Folic Acid,13,82835
+202411,Ramipril,15,76733
+202411,Sertraline,17,69012
+202411,Amoxicillin,21,60346
