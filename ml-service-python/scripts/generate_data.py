@@ -13,34 +13,29 @@ generates a plausible daily sales pattern for each existing product, shaped by:
   1. A base daily rate derived from the product's own min_threshold (a rough proxy
      for how fast it normally moves - no real basis beyond that).
   2. A relative demand weight from real HSE PCRS national prescribing data
-     (data/pcrs_national_trend.csv) when the product name matches a row there.
-     Products PCRS doesn't cover (e.g. mostly-OTC items) get weight 1.0 - PCRS only
-     captures GMS-scheme prescriptions, not over-the-counter sales.
-  3. A generic seasonal multiplier (winter uplift / summer dip) for month-to-month
-     variation. This part is an assumption for demo purposes, NOT sourced from PCRS.
+     (data/pcrs_national_trend.csv, 2016-2023) when the product name matches a row
+     there. Products PCRS doesn't cover (e.g. mostly-OTC items) get weight 1.0 -
+     PCRS only captures GMS-scheme prescriptions, not over-the-counter sales.
+  3. A real per-month seasonal index for that specific drug, averaged across all
+     8 years of PCRS data (see app/pcrs.py) - e.g. Amoxicillin genuinely peaks in
+     winter and dips in summer in the real data; a chronic-condition drug like
+     Atorvastatin barely moves month to month. Drugs/months PCRS doesn't cover
+     fall back to a flat 1.0, same as the demand weight.
   4. Poisson noise on top, so the series isn't a perfectly smooth curve.
 
 products.current_quantity is left untouched - only historical inventory_transactions
 rows are inserted, dated in the past. Re-running the script is safe: it skips any
 product that already has synthetic SALE history in the target window.
 """
-import csv
 import os
 from datetime import date, datetime, timedelta
-from pathlib import Path
 
 import numpy as np
 import pymysql
 
-HISTORY_DAYS = 180
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
-PCRS_CSV = DATA_DIR / "pcrs_national_trend.csv"
+from app.pcrs import load_pcrs_data
 
-# Generic seasonal assumption for a temperate-climate OTC/GMS pharmacy mix - not from PCRS.
-SEASONAL_MULTIPLIER = {
-    1: 1.15, 2: 1.15, 3: 1.05, 4: 0.95, 5: 0.9, 6: 0.85,
-    7: 0.85, 8: 0.9, 9: 1.0, 10: 1.05, 11: 1.15, 12: 1.2,
-}
+HISTORY_DAYS = 365
 
 # A representative small community pharmacy shelf. Names match pcrs_national_trend.csv
 # exactly where a real PCRS row exists, so the demand-weight lookup matches by name.
@@ -97,20 +92,7 @@ def db_connection():
     )
 
 
-def load_pcrs_weights():
-    if not PCRS_CSV.exists():
-        return {}
-    with open(PCRS_CSV, newline="", encoding="utf-8") as f:
-        data_lines = (line for line in f if not line.startswith("#"))
-        rows = list(csv.DictReader(data_lines))
-    if not rows:
-        return {}
-    frequencies = {row["product_name"].lower(): int(row["prescribing_frequency"]) for row in rows}
-    average = sum(frequencies.values()) / len(frequencies)
-    return {name: freq / average for name, freq in frequencies.items()}
-
-
-def seed_product(cursor, product, pcrs_weights, system_user_id):
+def seed_product(cursor, product, demand_weights, seasonal_index, system_user_id):
     cursor.execute(
         "SELECT COUNT(*) AS cnt FROM inventory_transactions "
         "WHERE product_id = %s AND reason = 'SALE' AND transaction_date >= %s",
@@ -120,14 +102,16 @@ def seed_product(cursor, product, pcrs_weights, system_user_id):
         print(f"  {product['name']}: already has synthetic history, skipping")
         return
 
+    name_key = product["name"].lower()
     base_rate = max(1.0, product["min_threshold"] / 10)
-    weight = pcrs_weights.get(product["name"].lower(), 1.0)
+    weight = demand_weights.get(name_key, 1.0)
+    drug_seasonal = seasonal_index.get(name_key, {})
 
     today = date.today()
     rows = []
     for offset in range(HISTORY_DAYS, 0, -1):
         day = today - timedelta(days=offset)
-        seasonal = SEASONAL_MULTIPLIER[day.month]
+        seasonal = drug_seasonal.get(day.month, 1.0)
         lam = max(0.1, base_rate * weight * seasonal)
         qty = int(np.random.poisson(lam=lam))
         if qty <= 0:
@@ -143,8 +127,8 @@ def seed_product(cursor, product, pcrs_weights, system_user_id):
 
 
 def main():
-    pcrs_weights = load_pcrs_weights()
-    print(f"Loaded PCRS demand weights for: {list(pcrs_weights.keys()) or 'none'}")
+    demand_weights, seasonal_index = load_pcrs_data()
+    print(f"Loaded PCRS demand weights for: {list(demand_weights.keys()) or 'none'}")
 
     conn = db_connection()
     try:
@@ -166,7 +150,7 @@ def main():
 
             print(f"Seeding {HISTORY_DAYS} days of synthetic sales for {len(products)} product(s)...")
             for product in products:
-                seed_product(cursor, product, pcrs_weights, system_user_id)
+                seed_product(cursor, product, demand_weights, seasonal_index, system_user_id)
 
         conn.commit()
         print("Done.")

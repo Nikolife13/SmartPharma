@@ -1,24 +1,1373 @@
 # Source: HSE PCRS Annual Reporting Portal (public, no login required)
 # https://www.sspcrs.ie/portal/annual-reporting/report/pharmacy -> "Top 100 Prescribing Products" (Monthly), Scheme Type = GMS
-# Collected manually on 2026-07-23 and 2026-07-28. National aggregate data for the Republic of Ireland (GMS
-# scheme only) - NOT this pharmacy's own sales. Used only as a relative demand-weight between drugs, not as a
-# multi-month time series (the portal's month picker could not be reliably automated for more than one period,
-# so all rows below are the same period: November 2024).
-# A product absent from this list (e.g. Ibuprofen, Metformin) simply wasn't captured in the top 30 of this one
-# snapshot - it is handled as a flat weight (1.0) in the generator, not treated as "zero demand".
-year_month,product_name,ranking_position,prescribing_frequency
-202411,Atorvastatin,1,212009
-202411,Levothyroxine Sodium,2,176591
-202411,Colecalciferol,3,175631
-202411,Esomeprazole,4,161235
-202411,Paracetamol,5,157856
-202411,Acetylsalicylic Acid,6,148404
-202411,Bisoprolol,7,129439
-202411,Rosuvastatin,9,102986
-202411,Salbutamol (Inhaled),10,99780
-202411,Pantoprazole,11,94001
-202411,Amlodipine,12,83819
-202411,Folic Acid,13,82835
-202411,Ramipril,15,76733
-202411,Sertraline,17,69012
-202411,Amoxicillin,21,60346
+# Collected manually on 2026-07-29. Full 8 years available on the portal (Jan 2016 - Dec 2023), all 12 months
+# each year, for the Republic of Ireland (GMS scheme only) - NOT this pharmacy's own sales. Used to derive both
+# a relative demand weight between drugs AND a real month-of-year seasonal index per drug, averaged across all
+# 8 years (see app/pcrs.py) - not a single year's noise.
+# A handful of 2016-2017 months show fewer than 15 drugs - some simply weren't in the GMS top-100 that early.
+# Amoxicillin also drops out of several mid-summer months most years (antibiotic prescribing dips then).
+# These gaps are left absent rather than guessed at; app/pcrs.py falls back to a flat 1.0 multiplier for them.
+year_month,product_name,prescribing_frequency
+201601,Atorvastatin,146970
+201601,Levothyroxine Sodium,130052
+201601,Esomeprazole,96068
+201601,Paracetamol,116595
+201601,Acetylsalicylic Acid,175596
+201601,Bisoprolol,96849
+201601,Rosuvastatin,65486
+201601,Salbutamol (Inhaled),97190
+201601,Pantoprazole,56938
+201601,Amlodipine,65593
+201601,Folic Acid,38393
+201601,Ramipril,60979
+201601,Amoxicillin,51869
+201602,Atorvastatin,145147
+201602,Levothyroxine Sodium,129685
+201602,Esomeprazole,95065
+201602,Paracetamol,116857
+201602,Acetylsalicylic Acid,173022
+201602,Bisoprolol,95915
+201602,Rosuvastatin,64478
+201602,Salbutamol (Inhaled),94311
+201602,Pantoprazole,56117
+201602,Amlodipine,64933
+201602,Folic Acid,36941
+201602,Ramipril,60403
+201602,Amoxicillin,48514
+201603,Atorvastatin,152416
+201603,Levothyroxine Sodium,136340
+201603,Esomeprazole,99962
+201603,Paracetamol,119536
+201603,Acetylsalicylic Acid,180313
+201603,Bisoprolol,100841
+201603,Rosuvastatin,67784
+201603,Salbutamol (Inhaled),95175
+201603,Pantoprazole,59049
+201603,Amlodipine,68574
+201603,Folic Acid,39406
+201603,Ramipril,63704
+201603,Amoxicillin,44475
+201604,Atorvastatin,151323
+201604,Levothyroxine Sodium,136675
+201604,Esomeprazole,100162
+201604,Paracetamol,116438
+201604,Acetylsalicylic Acid,178309
+201604,Bisoprolol,99929
+201604,Rosuvastatin,67613
+201604,Salbutamol (Inhaled),92621
+201604,Pantoprazole,58693
+201604,Amlodipine,67805
+201604,Folic Acid,39835
+201604,Ramipril,62875
+201604,Amoxicillin,35425
+201605,Atorvastatin,149130
+201605,Levothyroxine Sodium,134954
+201605,Esomeprazole,98825
+201605,Paracetamol,113575
+201605,Acetylsalicylic Acid,175834
+201605,Bisoprolol,99110
+201605,Rosuvastatin,66567
+201605,Salbutamol (Inhaled),89794
+201605,Pantoprazole,58035
+201605,Amlodipine,66731
+201605,Folic Acid,39985
+201605,Ramipril,61919
+201606,Atorvastatin,149449
+201606,Levothyroxine Sodium,136116
+201606,Esomeprazole,100160
+201606,Paracetamol,111082
+201606,Acetylsalicylic Acid,175235
+201606,Bisoprolol,99252
+201606,Rosuvastatin,66628
+201606,Salbutamol (Inhaled),89132
+201606,Pantoprazole,58210
+201606,Amlodipine,66756
+201606,Folic Acid,40614
+201606,Ramipril,62286
+201607,Atorvastatin,150547
+201607,Levothyroxine Sodium,137788
+201607,Esomeprazole,101731
+201607,Paracetamol,111076
+201607,Acetylsalicylic Acid,177148
+201607,Bisoprolol,100348
+201607,Rosuvastatin,67576
+201607,Salbutamol (Inhaled),87567
+201607,Pantoprazole,58777
+201607,Amlodipine,67341
+201607,Folic Acid,41103
+201607,Ramipril,62824
+201608,Atorvastatin,151989
+201608,Levothyroxine Sodium,138690
+201608,Esomeprazole,102460
+201608,Paracetamol,112266
+201608,Acetylsalicylic Acid,177945
+201608,Bisoprolol,101406
+201608,Rosuvastatin,67954
+201608,Salbutamol (Inhaled),86296
+201608,Pantoprazole,59435
+201608,Amlodipine,67732
+201608,Folic Acid,41837
+201608,Ramipril,63311
+201609,Atorvastatin,151210
+201609,Levothyroxine Sodium,137968
+201609,Esomeprazole,102440
+201609,Paracetamol,112330
+201609,Acetylsalicylic Acid,175957
+201609,Bisoprolol,100587
+201609,Rosuvastatin,67583
+201609,Salbutamol (Inhaled),93400
+201609,Pantoprazole,58992
+201609,Amlodipine,67149
+201609,Folic Acid,42110
+201609,Ramipril,62826
+201610,Atorvastatin,151210
+201610,Levothyroxine Sodium,137968
+201610,Esomeprazole,102440
+201610,Paracetamol,112330
+201610,Acetylsalicylic Acid,175957
+201610,Bisoprolol,100587
+201610,Rosuvastatin,67583
+201610,Salbutamol (Inhaled),93400
+201610,Pantoprazole,58992
+201610,Amlodipine,67149
+201610,Folic Acid,42110
+201610,Ramipril,62826
+201611,Atorvastatin,152669
+201611,Levothyroxine Sodium,139576
+201611,Esomeprazole,104384
+201611,Paracetamol,116725
+201611,Acetylsalicylic Acid,176267
+201611,Bisoprolol,102126
+201611,Rosuvastatin,68967
+201611,Salbutamol (Inhaled),98773
+201611,Pantoprazole,59852
+201611,Amlodipine,68373
+201611,Folic Acid,42900
+201611,Ramipril,63456
+201611,Amoxicillin,44171
+201612,Atorvastatin,155011
+201612,Levothyroxine Sodium,141778
+201612,Colecalciferol,36084
+201612,Esomeprazole,106905
+201612,Paracetamol,122000
+201612,Acetylsalicylic Acid,178208
+201612,Bisoprolol,103808
+201612,Rosuvastatin,70082
+201612,Salbutamol (Inhaled),106462
+201612,Pantoprazole,61143
+201612,Amlodipine,69164
+201612,Folic Acid,43084
+201612,Ramipril,64460
+201612,Amoxicillin,62811
+201701,Atorvastatin,150718
+201701,Levothyroxine Sodium,138428
+201701,Colecalciferol,36882
+201701,Esomeprazole,104357
+201701,Paracetamol,120096
+201701,Acetylsalicylic Acid,172905
+201701,Bisoprolol,101558
+201701,Rosuvastatin,67976
+201701,Salbutamol (Inhaled),96930
+201701,Pantoprazole,59496
+201701,Amlodipine,67643
+201701,Folic Acid,43130
+201701,Ramipril,62706
+201701,Amoxicillin,50336
+201702,Atorvastatin,141017
+201702,Levothyroxine Sodium,129694
+201702,Colecalciferol,36423
+201702,Esomeprazole,97834
+201702,Paracetamol,106984
+201702,Acetylsalicylic Acid,161424
+201702,Bisoprolol,94739
+201702,Rosuvastatin,63688
+201702,Salbutamol (Inhaled),86357
+201702,Pantoprazole,55631
+201702,Amlodipine,63209
+201702,Folic Acid,40854
+201702,Ramipril,58762
+201702,Amoxicillin,37505
+201703,Atorvastatin,156524
+201703,Levothyroxine Sodium,144039
+201703,Colecalciferol,42586
+201703,Esomeprazole,108909
+201703,Paracetamol,118942
+201703,Acetylsalicylic Acid,177900
+201703,Bisoprolol,104619
+201703,Rosuvastatin,70828
+201703,Salbutamol (Inhaled),95492
+201703,Pantoprazole,61681
+201703,Amlodipine,70335
+201703,Folic Acid,45824
+201703,Ramipril,64917
+201703,Amoxicillin,40672
+201704,Atorvastatin,145268
+201704,Levothyroxine Sodium,134190
+201704,Colecalciferol,40257
+201704,Esomeprazole,101160
+201704,Paracetamol,108813
+201704,Acetylsalicylic Acid,165913
+201704,Bisoprolol,97893
+201704,Rosuvastatin,65934
+201704,Salbutamol (Inhaled),86586
+201704,Pantoprazole,56988
+201704,Amlodipine,65644
+201704,Folic Acid,42392
+201704,Ramipril,60317
+201704,Amoxicillin,34375
+201705,Atorvastatin,153851
+201705,Levothyroxine Sodium,142583
+201705,Colecalciferol,44292
+201705,Esomeprazole,107985
+201705,Paracetamol,117021
+201705,Acetylsalicylic Acid,175363
+201705,Bisoprolol,103823
+201705,Rosuvastatin,69935
+201705,Salbutamol (Inhaled),93348
+201705,Pantoprazole,60915
+201705,Amlodipine,69534
+201705,Folic Acid,45218
+201705,Ramipril,64243
+201706,Atorvastatin,152702
+201706,Levothyroxine Sodium,142368
+201706,Colecalciferol,44462
+201706,Esomeprazole,107890
+201706,Paracetamol,114015
+201706,Acetylsalicylic Acid,173236
+201706,Bisoprolol,103034
+201706,Rosuvastatin,69406
+201706,Salbutamol (Inhaled),91299
+201706,Pantoprazole,60248
+201706,Amlodipine,68853
+201706,Folic Acid,46674
+201706,Ramipril,63489
+201707,Atorvastatin,149960
+201707,Levothyroxine Sodium,139126
+201707,Colecalciferol,44121
+201707,Esomeprazole,105731
+201707,Paracetamol,112001
+201707,Acetylsalicylic Acid,169533
+201707,Bisoprolol,100912
+201707,Rosuvastatin,68301
+201707,Salbutamol (Inhaled),86572
+201707,Pantoprazole,58845
+201707,Amlodipine,67345
+201707,Folic Acid,46575
+201707,Ramipril,62096
+201708,Atorvastatin,156004
+201708,Levothyroxine Sodium,144733
+201708,Colecalciferol,46318
+201708,Esomeprazole,110866
+201708,Paracetamol,116342
+201708,Acetylsalicylic Acid,175057
+201708,Bisoprolol,105174
+201708,Rosuvastatin,70921
+201708,Salbutamol (Inhaled),89588
+201708,Pantoprazole,61389
+201708,Amlodipine,69793
+201708,Folic Acid,48201
+201708,Ramipril,64516
+201708,Sertraline,36063
+201709,Atorvastatin,151639
+201709,Levothyroxine Sodium,140206
+201709,Colecalciferol,46390
+201709,Esomeprazole,107879
+201709,Paracetamol,115779
+201709,Acetylsalicylic Acid,169406
+201709,Bisoprolol,101969
+201709,Rosuvastatin,69130
+201709,Salbutamol (Inhaled),95192
+201709,Pantoprazole,59467
+201709,Amlodipine,67779
+201709,Folic Acid,47030
+201709,Ramipril,62557
+201709,Amoxicillin,37545
+201710,Atorvastatin,152009
+201710,Levothyroxine Sodium,140052
+201710,Colecalciferol,47617
+201710,Esomeprazole,107811
+201710,Paracetamol,115705
+201710,Acetylsalicylic Acid,168548
+201710,Bisoprolol,101977
+201710,Rosuvastatin,69099
+201710,Salbutamol (Inhaled),93570
+201710,Pantoprazole,59575
+201710,Amlodipine,68111
+201710,Folic Acid,47210
+201710,Ramipril,62252
+201710,Amoxicillin,36101
+201711,Atorvastatin,155838
+201711,Levothyroxine Sodium,143462
+201711,Colecalciferol,50899
+201711,Esomeprazole,111611
+201711,Paracetamol,119782
+201711,Acetylsalicylic Acid,172169
+201711,Bisoprolol,104543
+201711,Rosuvastatin,71082
+201711,Salbutamol (Inhaled),99401
+201711,Pantoprazole,61272
+201711,Amlodipine,69816
+201711,Folic Acid,48701
+201711,Ramipril,64140
+201711,Amoxicillin,41363
+201712,Atorvastatin,154511
+201712,Levothyroxine Sodium,142735
+201712,Colecalciferol,51074
+201712,Esomeprazole,110700
+201712,Paracetamol,119916
+201712,Acetylsalicylic Acid,170002
+201712,Bisoprolol,103663
+201712,Rosuvastatin,70791
+201712,Salbutamol (Inhaled),103746
+201712,Pantoprazole,60481
+201712,Amlodipine,69301
+201712,Folic Acid,47467
+201712,Ramipril,63393
+201712,Sertraline,35678
+201712,Amoxicillin,58827
+201801,Atorvastatin,157700
+201801,Levothyroxine Sodium,145562
+201801,Colecalciferol,53988
+201801,Esomeprazole,114198
+201801,Paracetamol,130593
+201801,Acetylsalicylic Acid,172844
+201801,Bisoprolol,105753
+201801,Rosuvastatin,71900
+201801,Salbutamol (Inhaled),104682
+201801,Pantoprazole,62204
+201801,Amlodipine,70868
+201801,Folic Acid,49079
+201801,Ramipril,64418
+201801,Sertraline,37188
+201801,Amoxicillin,61160
+201802,Atorvastatin,146741
+201802,Levothyroxine Sodium,135063
+201802,Colecalciferol,52106
+201802,Esomeprazole,105324
+201802,Paracetamol,115666
+201802,Acetylsalicylic Acid,159192
+201802,Bisoprolol,98326
+201802,Rosuvastatin,66877
+201802,Salbutamol (Inhaled),92051
+201802,Pantoprazole,57022
+201802,Amlodipine,65769
+201802,Folic Acid,45403
+201802,Ramipril,59700
+201802,Sertraline,34538
+201802,Amoxicillin,44068
+201803,Atorvastatin,156660
+201803,Levothyroxine Sodium,144155
+201803,Colecalciferol,57036
+201803,Esomeprazole,112684
+201803,Paracetamol,119726
+201803,Acetylsalicylic Acid,169087
+201803,Bisoprolol,104759
+201803,Rosuvastatin,71318
+201803,Salbutamol (Inhaled),95204
+201803,Pantoprazole,61159
+201803,Amlodipine,70927
+201803,Folic Acid,48689
+201803,Ramipril,63594
+201803,Sertraline,37178
+201803,Amoxicillin,38954
+201804,Atorvastatin,150443
+201804,Levothyroxine Sodium,139238
+201804,Colecalciferol,57388
+201804,Esomeprazole,109330
+201804,Paracetamol,116584
+201804,Acetylsalicylic Acid,162425
+201804,Bisoprolol,101251
+201804,Rosuvastatin,68469
+201804,Salbutamol (Inhaled),89945
+201804,Pantoprazole,59189
+201804,Amlodipine,67766
+201804,Folic Acid,47605
+201804,Ramipril,61157
+201804,Sertraline,36029
+201805,Atorvastatin,159565
+201805,Levothyroxine Sodium,147855
+201805,Colecalciferol,61738
+201805,Esomeprazole,116409
+201805,Paracetamol,122646
+201805,Acetylsalicylic Acid,171231
+201805,Bisoprolol,107101
+201805,Rosuvastatin,72953
+201805,Salbutamol (Inhaled),95798
+201805,Pantoprazole,62460
+201805,Amlodipine,71830
+201805,Folic Acid,50751
+201805,Ramipril,64730
+201805,Sertraline,38683
+201806,Atorvastatin,154145
+201806,Levothyroxine Sodium,143567
+201806,Colecalciferol,58976
+201806,Esomeprazole,112080
+201806,Paracetamol,115856
+201806,Acetylsalicylic Acid,165726
+201806,Bisoprolol,103843
+201806,Rosuvastatin,70541
+201806,Salbutamol (Inhaled),92284
+201806,Pantoprazole,60436
+201806,Amlodipine,69088
+201806,Folic Acid,49410
+201806,Ramipril,62548
+201806,Sertraline,36797
+201807,Atorvastatin,156003
+201807,Levothyroxine Sodium,146211
+201807,Colecalciferol,59340
+201807,Esomeprazole,114830
+201807,Paracetamol,118053
+201807,Acetylsalicylic Acid,167436
+201807,Bisoprolol,105397
+201807,Rosuvastatin,71384
+201807,Salbutamol (Inhaled),89913
+201807,Pantoprazole,61272
+201807,Amlodipine,70055
+201807,Folic Acid,50899
+201807,Ramipril,63358
+201807,Sertraline,37775
+201808,Atorvastatin,161023
+201808,Levothyroxine Sodium,151092
+201808,Colecalciferol,61069
+201808,Esomeprazole,118774
+201808,Paracetamol,121017
+201808,Acetylsalicylic Acid,171893
+201808,Bisoprolol,108624
+201808,Rosuvastatin,73793
+201808,Salbutamol (Inhaled),91183
+201808,Pantoprazole,63302
+201808,Amlodipine,72348
+201808,Folic Acid,52514
+201808,Ramipril,65489
+201808,Sertraline,39459
+201809,Atorvastatin,149692
+201809,Levothyroxine Sodium,140034
+201809,Colecalciferol,57785
+201809,Esomeprazole,111095
+201809,Paracetamol,115795
+201809,Acetylsalicylic Acid,159331
+201809,Bisoprolol,101072
+201809,Rosuvastatin,68926
+201809,Salbutamol (Inhaled),92750
+201809,Pantoprazole,59035
+201809,Amlodipine,67292
+201809,Folic Acid,48697
+201809,Ramipril,60843
+201809,Sertraline,36536
+201809,Amoxicillin,36395
+201810,Atorvastatin,157762
+201810,Levothyroxine Sodium,147985
+201810,Colecalciferol,62946
+201810,Esomeprazole,117911
+201810,Paracetamol,124016
+201810,Acetylsalicylic Acid,167309
+201810,Bisoprolol,106802
+201810,Rosuvastatin,73041
+201810,Salbutamol (Inhaled),99517
+201810,Pantoprazole,62595
+201810,Amlodipine,71350
+201810,Folic Acid,51841
+201810,Ramipril,64234
+201810,Sertraline,39372
+201810,Amoxicillin,39895
+201811,Atorvastatin,159180
+201811,Levothyroxine Sodium,149531
+201811,Colecalciferol,64880
+201811,Esomeprazole,119184
+201811,Paracetamol,125179
+201811,Acetylsalicylic Acid,167140
+201811,Bisoprolol,107625
+201811,Rosuvastatin,73326
+201811,Salbutamol (Inhaled),100383
+201811,Pantoprazole,62964
+201811,Amlodipine,72215
+201811,Folic Acid,52077
+201811,Ramipril,64793
+201811,Sertraline,39933
+201811,Amoxicillin,41637
+201812,Atorvastatin,156033
+201812,Levothyroxine Sodium,146777
+201812,Colecalciferol,63998
+201812,Esomeprazole,117401
+201812,Paracetamol,122889
+201812,Acetylsalicylic Acid,163415
+201812,Bisoprolol,105482
+201812,Rosuvastatin,72448
+201812,Salbutamol (Inhaled),102749
+201812,Pantoprazole,61828
+201812,Amlodipine,71678
+201812,Folic Acid,50482
+201812,Ramipril,62955
+201812,Sertraline,38780
+201812,Amoxicillin,53514
+201901,Atorvastatin,160506
+201901,Levothyroxine Sodium,150555
+201901,Colecalciferol,67895
+201901,Esomeprazole,122221
+201901,Paracetamol,131228
+201901,Acetylsalicylic Acid,167172
+201901,Bisoprolol,108881
+201901,Rosuvastatin,74232
+201901,Salbutamol (Inhaled),105243
+201901,Pantoprazole,64082
+201901,Amlodipine,73352
+201901,Folic Acid,52533
+201901,Ramipril,65088
+201901,Sertraline,40908
+201901,Amoxicillin,56213
+201902,Atorvastatin,147252
+201902,Levothyroxine Sodium,138849
+201902,Colecalciferol,64373
+201902,Esomeprazole,111567
+201902,Paracetamol,118059
+201902,Acetylsalicylic Acid,152331
+201902,Bisoprolol,99845
+201902,Rosuvastatin,68353
+201902,Salbutamol (Inhaled),92353
+201902,Pantoprazole,58578
+201902,Amlodipine,67905
+201902,Folic Acid,48398
+201902,Ramipril,59690
+201902,Sertraline,37746
+201902,Amoxicillin,41818
+201903,Atorvastatin,155860
+201903,Levothyroxine Sodium,146904
+201903,Colecalciferol,69468
+201903,Esomeprazole,118247
+201903,Paracetamol,122538
+201903,Acetylsalicylic Acid,160634
+201903,Bisoprolol,105534
+201903,Rosuvastatin,72522
+201903,Salbutamol (Inhaled),95743
+201903,Pantoprazole,61903
+201903,Amlodipine,71883
+201903,Folic Acid,51067
+201903,Ramipril,63378
+201903,Sertraline,39995
+201903,Amoxicillin,38298
+201904,Atorvastatin,156432
+201904,Levothyroxine Sodium,147873
+201904,Colecalciferol,70910
+201904,Esomeprazole,118710
+201904,Paracetamol,123329
+201904,Acetylsalicylic Acid,160047
+201904,Bisoprolol,106070
+201904,Rosuvastatin,72546
+201904,Salbutamol (Inhaled),95955
+201904,Pantoprazole,62163
+201904,Amlodipine,71627
+201904,Folic Acid,51581
+201904,Ramipril,63896
+201904,Sertraline,40359
+201904,Amoxicillin,39563
+201905,Atorvastatin,163735
+201905,Levothyroxine Sodium,155763
+201905,Colecalciferol,75547
+201905,Esomeprazole,125365
+201905,Paracetamol,127955
+201905,Acetylsalicylic Acid,167184
+201905,Bisoprolol,111364
+201905,Rosuvastatin,76283
+201905,Salbutamol (Inhaled),99745
+201905,Pantoprazole,65358
+201905,Amlodipine,75189
+201905,Folic Acid,54515
+201905,Ramipril,67122
+201905,Sertraline,43084
+201906,Atorvastatin,151516
+201906,Levothyroxine Sodium,144020
+201906,Colecalciferol,70310
+201906,Esomeprazole,115237
+201906,Paracetamol,117645
+201906,Acetylsalicylic Acid,154028
+201906,Bisoprolol,102878
+201906,Rosuvastatin,70291
+201906,Salbutamol (Inhaled),90778
+201906,Pantoprazole,60712
+201906,Amlodipine,68955
+201906,Folic Acid,50370
+201906,Ramipril,61697
+201906,Sertraline,39409
+201907,Atorvastatin,162575
+201907,Levothyroxine Sodium,154871
+201907,Colecalciferol,75489
+201907,Esomeprazole,124059
+201907,Paracetamol,124970
+201907,Acetylsalicylic Acid,164498
+201907,Bisoprolol,110331
+201907,Rosuvastatin,75459
+201907,Salbutamol (Inhaled),95821
+201907,Pantoprazole,64815
+201907,Amlodipine,73755
+201907,Folic Acid,54688
+201907,Ramipril,66385
+201907,Sertraline,42630
+201908,Atorvastatin,161442
+201908,Levothyroxine Sodium,153978
+201908,Colecalciferol,74869
+201908,Esomeprazole,123756
+201908,Paracetamol,121902
+201908,Acetylsalicylic Acid,162625
+201908,Bisoprolol,109927
+201908,Rosuvastatin,75271
+201908,Salbutamol (Inhaled),92633
+201908,Pantoprazole,64540
+201908,Amlodipine,72994
+201908,Folic Acid,54072
+201908,Ramipril,65573
+201908,Sertraline,42342
+201909,Atorvastatin,154544
+201909,Levothyroxine Sodium,143110
+201909,Colecalciferol,73371
+201909,Esomeprazole,119258
+201909,Paracetamol,120989
+201909,Acetylsalicylic Acid,155040
+201909,Bisoprolol,105206
+201909,Rosuvastatin,72283
+201909,Salbutamol (Inhaled),96494
+201909,Pantoprazole,62464
+201909,Amlodipine,69834
+201909,Folic Acid,52122
+201909,Ramipril,62592
+201909,Sertraline,40980
+201909,Amoxicillin,40011
+201910,Atorvastatin,162370
+201910,Levothyroxine Sodium,151386
+201910,Colecalciferol,78457
+201910,Esomeprazole,127116
+201910,Paracetamol,126933
+201910,Acetylsalicylic Acid,161807
+201910,Bisoprolol,110457
+201910,Rosuvastatin,75590
+201910,Salbutamol (Inhaled),101312
+201910,Pantoprazole,66722
+201910,Amlodipine,73238
+201910,Folic Acid,54549
+201910,Ramipril,65860
+201910,Sertraline,43374
+201910,Amoxicillin,46099
+201911,Atorvastatin,162370
+201911,Levothyroxine Sodium,151386
+201911,Colecalciferol,78457
+201911,Esomeprazole,127116
+201911,Paracetamol,126933
+201911,Acetylsalicylic Acid,161807
+201911,Bisoprolol,110457
+201911,Rosuvastatin,75590
+201911,Salbutamol (Inhaled),101312
+201911,Pantoprazole,66722
+201911,Amlodipine,73238
+201911,Folic Acid,54549
+201911,Ramipril,65860
+201911,Sertraline,43374
+201911,Amoxicillin,46099
+201912,Atorvastatin,162039
+201912,Levothyroxine Sodium,152995
+201912,Colecalciferol,80811
+201912,Esomeprazole,127635
+201912,Paracetamol,132799
+201912,Acetylsalicylic Acid,160103
+201912,Bisoprolol,110254
+201912,Rosuvastatin,76041
+201912,Salbutamol (Inhaled),109368
+201912,Pantoprazole,67796
+201912,Amlodipine,73247
+201912,Folic Acid,54680
+201912,Ramipril,65301
+201912,Sertraline,43223
+201912,Amoxicillin,77009
+202001,Atorvastatin,164866
+202001,Levothyroxine Sodium,156248
+202001,Colecalciferol,85131
+202001,Esomeprazole,130865
+202001,Paracetamol,134068
+202001,Acetylsalicylic Acid,162000
+202001,Bisoprolol,112600
+202001,Rosuvastatin,77434
+202001,Salbutamol (Inhaled),105020
+202001,Pantoprazole,69780
+202001,Amlodipine,74583
+202001,Folic Acid,56214
+202001,Ramipril,66461
+202001,Sertraline,45521
+202001,Amoxicillin,56678
+202002,Atorvastatin,154368
+202002,Levothyroxine Sodium,146587
+202002,Colecalciferol,81733
+202002,Esomeprazole,121978
+202002,Paracetamol,123280
+202002,Acetylsalicylic Acid,151222
+202002,Bisoprolol,105451
+202002,Rosuvastatin,72797
+202002,Salbutamol (Inhaled),94274
+202002,Pantoprazole,64733
+202002,Amlodipine,69888
+202002,Folic Acid,53100
+202002,Ramipril,62212
+202002,Sertraline,42245
+202002,Amoxicillin,44833
+202003,Atorvastatin,172247
+202003,Levothyroxine Sodium,165900
+202003,Colecalciferol,93613
+202003,Esomeprazole,135522
+202003,Paracetamol,150025
+202003,Acetylsalicylic Acid,167524
+202003,Bisoprolol,116353
+202003,Rosuvastatin,81942
+202003,Salbutamol (Inhaled),131147
+202003,Pantoprazole,71719
+202003,Amlodipine,78489
+202003,Folic Acid,59043
+202003,Ramipril,69280
+202003,Sertraline,47258
+202003,Amoxicillin,46273
+202004,Atorvastatin,163922
+202004,Levothyroxine Sodium,155048
+202004,Colecalciferol,91595
+202004,Esomeprazole,128047
+202004,Paracetamol,135751
+202004,Acetylsalicylic Acid,158231
+202004,Bisoprolol,110627
+202004,Rosuvastatin,77295
+202004,Salbutamol (Inhaled),105106
+202004,Pantoprazole,68256
+202004,Amlodipine,73814
+202004,Folic Acid,55882
+202004,Ramipril,65327
+202004,Sertraline,44850
+202005,Atorvastatin,160179
+202005,Levothyroxine Sodium,152559
+202005,Colecalciferol,91521
+202005,Esomeprazole,125994
+202005,Paracetamol,128647
+202005,Acetylsalicylic Acid,154416
+202005,Bisoprolol,108343
+202005,Rosuvastatin,75577
+202005,Salbutamol (Inhaled),96316
+202005,Pantoprazole,67206
+202005,Amlodipine,72157
+202005,Folic Acid,54761
+202005,Ramipril,64062
+202005,Sertraline,45012
+202006,Atorvastatin,160968
+202006,Levothyroxine Sodium,153734
+202006,Colecalciferol,93321
+202006,Esomeprazole,128076
+202006,Paracetamol,128332
+202006,Acetylsalicylic Acid,154615
+202006,Bisoprolol,109015
+202006,Rosuvastatin,76295
+202006,Salbutamol (Inhaled),94002
+202006,Pantoprazole,67854
+202006,Amlodipine,72578
+202006,Folic Acid,56423
+202006,Ramipril,64273
+202006,Sertraline,45660
+202007,Atorvastatin,169160
+202007,Levothyroxine Sodium,161322
+202007,Colecalciferol,98423
+202007,Esomeprazole,134996
+202007,Paracetamol,134714
+202007,Acetylsalicylic Acid,161773
+202007,Bisoprolol,114502
+202007,Rosuvastatin,80111
+202007,Salbutamol (Inhaled),97486
+202007,Pantoprazole,71531
+202007,Amlodipine,75928
+202007,Folic Acid,60148
+202007,Ramipril,68021
+202007,Sertraline,48228
+202008,Atorvastatin,160985
+202008,Levothyroxine Sodium,154150
+202008,Colecalciferol,95254
+202008,Esomeprazole,128459
+202008,Paracetamol,127666
+202008,Acetylsalicylic Acid,153400
+202008,Bisoprolol,108926
+202008,Rosuvastatin,76506
+202008,Salbutamol (Inhaled),93951
+202008,Pantoprazole,68514
+202008,Amlodipine,71990
+202008,Folic Acid,57925
+202008,Ramipril,64363
+202008,Sertraline,46229
+202009,Atorvastatin,164635
+202009,Levothyroxine Sodium,157377
+202009,Colecalciferol,99128
+202009,Esomeprazole,131989
+202009,Paracetamol,132547
+202009,Acetylsalicylic Acid,155541
+202009,Bisoprolol,111128
+202009,Rosuvastatin,77981
+202009,Salbutamol (Inhaled),102556
+202009,Pantoprazole,70461
+202009,Amlodipine,73352
+202009,Folic Acid,59877
+202009,Ramipril,65822
+202009,Sertraline,47746
+202010,Atorvastatin,169134
+202010,Levothyroxine Sodium,161031
+202010,Colecalciferol,104165
+202010,Esomeprazole,135068
+202010,Paracetamol,135579
+202010,Acetylsalicylic Acid,159398
+202010,Bisoprolol,113392
+202010,Rosuvastatin,80747
+202010,Salbutamol (Inhaled),103346
+202010,Pantoprazole,71945
+202010,Amlodipine,75419
+202010,Folic Acid,61213
+202010,Ramipril,67428
+202010,Sertraline,49406
+202011,Atorvastatin,165576
+202011,Levothyroxine Sodium,157206
+202011,Colecalciferol,105424
+202011,Esomeprazole,133097
+202011,Paracetamol,133099
+202011,Acetylsalicylic Acid,155099
+202011,Bisoprolol,111627
+202011,Rosuvastatin,78737
+202011,Salbutamol (Inhaled),97750
+202011,Pantoprazole,71018
+202011,Amlodipine,73683
+202011,Folic Acid,60672
+202011,Ramipril,66043
+202011,Sertraline,48886
+202012,Atorvastatin,175886
+202012,Levothyroxine Sodium,167046
+202012,Colecalciferol,112803
+202012,Esomeprazole,141499
+202012,Paracetamol,138933
+202012,Acetylsalicylic Acid,163573
+202012,Bisoprolol,118411
+202012,Rosuvastatin,84089
+202012,Salbutamol (Inhaled),105160
+202012,Pantoprazole,75469
+202012,Amlodipine,78469
+202012,Folic Acid,63655
+202012,Ramipril,70072
+202012,Sertraline,51797
+202101,Atorvastatin,167799
+202101,Levothyroxine Sodium,158492
+202101,Colecalciferol,111599
+202101,Esomeprazole,134343
+202101,Paracetamol,133579
+202101,Acetylsalicylic Acid,155365
+202101,Bisoprolol,112853
+202101,Rosuvastatin,80082
+202101,Salbutamol (Inhaled),99085
+202101,Pantoprazole,71755
+202101,Amlodipine,74198
+202101,Folic Acid,60361
+202101,Ramipril,66543
+202101,Sertraline,49568
+202102,Atorvastatin,158807
+202102,Levothyroxine Sodium,150295
+202102,Colecalciferol,109966
+202102,Esomeprazole,127171
+202102,Paracetamol,125011
+202102,Acetylsalicylic Acid,146144
+202102,Bisoprolol,106654
+202102,Rosuvastatin,75494
+202102,Salbutamol (Inhaled),90447
+202102,Pantoprazole,68520
+202102,Amlodipine,70503
+202102,Folic Acid,57058
+202102,Ramipril,62737
+202102,Sertraline,47602
+202103,Atorvastatin,174787
+202103,Levothyroxine Sodium,165534
+202103,Colecalciferol,123944
+202103,Esomeprazole,141264
+202103,Paracetamol,138829
+202103,Acetylsalicylic Acid,160537
+202103,Bisoprolol,117424
+202103,Rosuvastatin,83635
+202103,Salbutamol (Inhaled),98552
+202103,Pantoprazole,75659
+202103,Amlodipine,77723
+202103,Folic Acid,63624
+202103,Ramipril,69477
+202103,Sertraline,53499
+202104,Atorvastatin,171194
+202104,Levothyroxine Sodium,162482
+202104,Colecalciferol,124324
+202104,Esomeprazole,138327
+202104,Paracetamol,136828
+202104,Acetylsalicylic Acid,156402
+202104,Bisoprolol,114995
+202104,Rosuvastatin,81564
+202104,Salbutamol (Inhaled),96429
+202104,Pantoprazole,74127
+202104,Amlodipine,76102
+202104,Folic Acid,62691
+202104,Ramipril,67740
+202104,Sertraline,51889
+202105,Atorvastatin,966
+202105,Levothyroxine Sodium,802
+202105,Colecalciferol,559
+202105,Esomeprazole,658
+202105,Paracetamol,575
+202105,Acetylsalicylic Acid,789
+202105,Bisoprolol,678
+202105,Rosuvastatin,444
+202105,Salbutamol (Inhaled),438
+202105,Pantoprazole,313
+202105,Amlodipine,457
+202105,Folic Acid,257
+202105,Ramipril,422
+202105,Sertraline,241
+202106,Atorvastatin,335301
+202106,Levothyroxine Sodium,317057
+202106,Colecalciferol,241209
+202106,Esomeprazole,270733
+202106,Paracetamol,270020
+202106,Acetylsalicylic Acid,305215
+202106,Bisoprolol,225797
+202106,Rosuvastatin,159795
+202106,Salbutamol (Inhaled),188544
+202106,Pantoprazole,145771
+202106,Amlodipine,149129
+202106,Folic Acid,122153
+202106,Ramipril,133071
+202106,Sertraline,102723
+202107,Atorvastatin,176901
+202107,Levothyroxine Sodium,167082
+202107,Colecalciferol,124905
+202107,Esomeprazole,143276
+202107,Paracetamol,142187
+202107,Acetylsalicylic Acid,160261
+202107,Bisoprolol,119135
+202107,Rosuvastatin,84887
+202107,Salbutamol (Inhaled),98946
+202107,Pantoprazole,77135
+202107,Amlodipine,77918
+202107,Folic Acid,65239
+202107,Ramipril,70279
+202107,Sertraline,54158
+202108,Atorvastatin,170261
+202108,Levothyroxine Sodium,160955
+202108,Colecalciferol,120204
+202108,Esomeprazole,137776
+202108,Paracetamol,136212
+202108,Acetylsalicylic Acid,153394
+202108,Bisoprolol,114514
+202108,Rosuvastatin,81683
+202108,Salbutamol (Inhaled),93195
+202108,Pantoprazole,74706
+202108,Amlodipine,74883
+202108,Folic Acid,63505
+202108,Ramipril,67417
+202108,Sertraline,52193
+202109,Atorvastatin,173503
+202109,Levothyroxine Sodium,163081
+202109,Colecalciferol,122839
+202109,Esomeprazole,140696
+202109,Paracetamol,139137
+202109,Acetylsalicylic Acid,154767
+202109,Bisoprolol,116056
+202109,Rosuvastatin,82796
+202109,Salbutamol (Inhaled),99633
+202109,Pantoprazole,75992
+202109,Amlodipine,75664
+202109,Folic Acid,65350
+202109,Ramipril,68464
+202109,Sertraline,53780
+202110,Atorvastatin,171537
+202110,Levothyroxine Sodium,160722
+202110,Colecalciferol,121722
+202110,Esomeprazole,137678
+202110,Paracetamol,137750
+202110,Acetylsalicylic Acid,152505
+202110,Bisoprolol,114928
+202110,Rosuvastatin,82314
+202110,Salbutamol (Inhaled),101675
+202110,Pantoprazole,75219
+202110,Amlodipine,75021
+202110,Folic Acid,64333
+202110,Ramipril,67568
+202110,Sertraline,52967
+202110,Amoxicillin,48483
+202111,Atorvastatin,175271
+202111,Levothyroxine Sodium,163352
+202111,Colecalciferol,126982
+202111,Esomeprazole,141877
+202111,Paracetamol,142265
+202111,Acetylsalicylic Acid,154519
+202111,Bisoprolol,116641
+202111,Rosuvastatin,84118
+202111,Salbutamol (Inhaled),105614
+202111,Pantoprazole,76948
+202111,Amlodipine,76265
+202111,Folic Acid,66024
+202111,Ramipril,68972
+202111,Sertraline,54706
+202111,Amoxicillin,51878
+202112,Atorvastatin,182023
+202112,Levothyroxine Sodium,169272
+202112,Colecalciferol,131039
+202112,Esomeprazole,146569
+202112,Paracetamol,146480
+202112,Acetylsalicylic Acid,159399
+202112,Bisoprolol,121117
+202112,Rosuvastatin,87357
+202112,Salbutamol (Inhaled),108074
+202112,Pantoprazole,79310
+202112,Amlodipine,79035
+202112,Folic Acid,67481
+202112,Ramipril,71383
+202112,Sertraline,56073
+202112,Amoxicillin,47389
+202201,Atorvastatin,175899
+202201,Levothyroxine Sodium,163461
+202201,Colecalciferol,128900
+202201,Esomeprazole,142135
+202201,Paracetamol,143603
+202201,Acetylsalicylic Acid,153888
+202201,Bisoprolol,117549
+202201,Rosuvastatin,84000
+202201,Salbutamol (Inhaled),101131
+202201,Pantoprazole,77207
+202201,Amlodipine,76420
+202201,Folic Acid,66095
+202201,Ramipril,68980
+202201,Sertraline,54824
+202202,Atorvastatin,167329
+202202,Levothyroxine Sodium,155249
+202202,Colecalciferol,125212
+202202,Esomeprazole,135177
+202202,Paracetamol,135756
+202202,Acetylsalicylic Acid,145276
+202202,Bisoprolol,111461
+202202,Rosuvastatin,80496
+202202,Salbutamol (Inhaled),94968
+202202,Pantoprazole,74058
+202202,Amlodipine,72958
+202202,Folic Acid,63630
+202202,Ramipril,65595
+202202,Sertraline,52065
+202203,Atorvastatin,180704
+202203,Levothyroxine Sodium,166948
+202203,Colecalciferol,135806
+202203,Esomeprazole,145287
+202203,Paracetamol,148060
+202203,Acetylsalicylic Acid,155341
+202203,Bisoprolol,119554
+202203,Rosuvastatin,86949
+202203,Salbutamol (Inhaled),104765
+202203,Pantoprazole,79209
+202203,Amlodipine,78699
+202203,Folic Acid,69068
+202203,Ramipril,70804
+202203,Sertraline,56628
+202203,Amoxicillin,56623
+202204,Atorvastatin,177744
+202204,Levothyroxine Sodium,163564
+202204,Colecalciferol,133477
+202204,Esomeprazole,141570
+202204,Paracetamol,141053
+202204,Acetylsalicylic Acid,151981
+202204,Bisoprolol,117658
+202204,Rosuvastatin,85623
+202204,Salbutamol (Inhaled),99160
+202204,Pantoprazole,78344
+202204,Amlodipine,77150
+202204,Folic Acid,67811
+202204,Ramipril,69461
+202204,Sertraline,55216
+202204,Amoxicillin,46589
+202205,Atorvastatin,178923
+202205,Levothyroxine Sodium,164806
+202205,Colecalciferol,135821
+202205,Esomeprazole,143503
+202205,Paracetamol,132570
+202205,Acetylsalicylic Acid,152410
+202205,Bisoprolol,118604
+202205,Rosuvastatin,85804
+202205,Salbutamol (Inhaled),100691
+202205,Pantoprazole,79435
+202205,Amlodipine,77550
+202205,Folic Acid,69074
+202205,Ramipril,69763
+202205,Sertraline,56154
+202205,Amoxicillin,47401
+202206,Atorvastatin,180504
+202206,Levothyroxine Sodium,165448
+202206,Colecalciferol,135850
+202206,Esomeprazole,144400
+202206,Paracetamol,138424
+202206,Acetylsalicylic Acid,152568
+202206,Bisoprolol,118954
+202206,Rosuvastatin,86762
+202206,Salbutamol (Inhaled),100596
+202206,Pantoprazole,79567
+202206,Amlodipine,77728
+202206,Folic Acid,69956
+202206,Ramipril,70295
+202206,Sertraline,56421
+202206,Amoxicillin,46694
+202207,Atorvastatin,181001
+202207,Levothyroxine Sodium,165979
+202207,Colecalciferol,135194
+202207,Esomeprazole,143672
+202207,Paracetamol,142432
+202207,Acetylsalicylic Acid,152133
+202207,Bisoprolol,119353
+202207,Rosuvastatin,87070
+202207,Salbutamol (Inhaled),97347
+202207,Pantoprazole,79426
+202207,Amlodipine,77480
+202207,Folic Acid,70740
+202207,Ramipril,70350
+202207,Sertraline,56168
+202208,Atorvastatin,185441
+202208,Levothyroxine Sodium,169942
+202208,Colecalciferol,137280
+202208,Esomeprazole,147811
+202208,Paracetamol,144136
+202208,Acetylsalicylic Acid,154969
+202208,Bisoprolol,121943
+202208,Rosuvastatin,89271
+202208,Salbutamol (Inhaled),97135
+202208,Pantoprazole,81868
+202208,Amlodipine,78631
+202208,Folic Acid,72812
+202208,Ramipril,72010
+202208,Sertraline,58248
+202209,Atorvastatin,183925
+202209,Levothyroxine Sodium,167240
+202209,Colecalciferol,136057
+202209,Esomeprazole,146666
+202209,Paracetamol,145082
+202209,Acetylsalicylic Acid,152902
+202209,Bisoprolol,120178
+202209,Rosuvastatin,88823
+202209,Salbutamol (Inhaled),101959
+202209,Pantoprazole,81489
+202209,Amlodipine,78175
+202209,Folic Acid,72200
+202209,Ramipril,71337
+202209,Sertraline,58035
+202209,Amoxicillin,47714
+202210,Atorvastatin,179618
+202210,Levothyroxine Sodium,162839
+202210,Colecalciferol,134556
+202210,Esomeprazole,142625
+202210,Paracetamol,141776
+202210,Acetylsalicylic Acid,148068
+202210,Bisoprolol,117672
+202210,Rosuvastatin,86644
+202210,Salbutamol (Inhaled),100751
+202210,Pantoprazole,79605
+202210,Amlodipine,75825
+202210,Folic Acid,70376
+202210,Ramipril,69168
+202210,Sertraline,56304
+202210,Amoxicillin,58371
+202211,Atorvastatin,188738
+202211,Levothyroxine Sodium,169957
+202211,Colecalciferol,142909
+202211,Esomeprazole,149838
+202211,Paracetamol,149036
+202211,Acetylsalicylic Acid,154267
+202211,Bisoprolol,122613
+202211,Rosuvastatin,90971
+202211,Salbutamol (Inhaled),107164
+202211,Pantoprazole,83471
+202211,Amlodipine,80009
+202211,Folic Acid,73563
+202211,Ramipril,72366
+202211,Sertraline,59903
+202211,Amoxicillin,68665
+202212,Atorvastatin,193062
+202212,Levothyroxine Sodium,173373
+202212,Colecalciferol,146120
+202212,Esomeprazole,152540
+202212,Paracetamol,152610
+202212,Acetylsalicylic Acid,156949
+202212,Bisoprolol,125670
+202212,Rosuvastatin,93447
+202212,Salbutamol (Inhaled),115963
+202212,Pantoprazole,85461
+202212,Amlodipine,81549
+202212,Folic Acid,74454
+202212,Ramipril,73831
+202212,Sertraline,59721
+202212,Amoxicillin,102073
+202301,Atorvastatin,189237
+202301,Levothyroxine Sodium,169143
+202301,Colecalciferol,144782
+202301,Esomeprazole,149649
+202301,Paracetamol,148585
+202301,Acetylsalicylic Acid,152838
+202301,Bisoprolol,122539
+202301,Rosuvastatin,91328
+202301,Salbutamol (Inhaled),106280
+202301,Pantoprazole,84331
+202301,Amlodipine,79792
+202301,Folic Acid,73378
+202301,Ramipril,72366
+202301,Sertraline,60079
+202301,Amoxicillin,73013
+202302,Atorvastatin,179779
+202302,Levothyroxine Sodium,159327
+202302,Colecalciferol,138537
+202302,Esomeprazole,141037
+202302,Paracetamol,139836
+202302,Acetylsalicylic Acid,143652
+202302,Bisoprolol,115796
+202302,Rosuvastatin,86548
+202302,Salbutamol (Inhaled),96701
+202302,Pantoprazole,79329
+202302,Amlodipine,76037
+202302,Folic Acid,69950
+202302,Ramipril,68287
+202302,Sertraline,56620
+202302,Amoxicillin,56594
+202303,Atorvastatin,196073
+202303,Levothyroxine Sodium,173217
+202303,Colecalciferol,152349
+202303,Esomeprazole,153195
+202303,Paracetamol,152649
+202303,Acetylsalicylic Acid,154198
+202303,Bisoprolol,125003
+202303,Rosuvastatin,94397
+202303,Salbutamol (Inhaled),105082
+202303,Pantoprazole,86632
+202303,Amlodipine,83314
+202303,Folic Acid,76150
+202303,Ramipril,74294
+202303,Sertraline,62194
+202303,Amoxicillin,69997
+202304,Atorvastatin,187604
+202304,Levothyroxine Sodium,164953
+202304,Colecalciferol,146040
+202304,Esomeprazole,145200
+202304,Paracetamol,142733
+202304,Acetylsalicylic Acid,147066
+202304,Bisoprolol,119775
+202304,Rosuvastatin,90494
+202304,Salbutamol (Inhaled),95996
+202304,Pantoprazole,82310
+202304,Amlodipine,79466
+202304,Folic Acid,72614
+202304,Ramipril,70790
+202304,Sertraline,59144
+202304,Amoxicillin,51043
+202305,Atorvastatin,196971
+202305,Levothyroxine Sodium,172839
+202305,Colecalciferol,155018
+202305,Esomeprazole,153624
+202305,Paracetamol,146731
+202305,Acetylsalicylic Acid,153687
+202305,Bisoprolol,125361
+202305,Rosuvastatin,95064
+202305,Salbutamol (Inhaled),103539
+202305,Pantoprazole,86517
+202305,Amlodipine,82731
+202305,Folic Acid,77351
+202305,Ramipril,74380
+202305,Sertraline,62941
+202305,Amoxicillin,55603
+202306,Atorvastatin,197218
+202306,Levothyroxine Sodium,172580
+202306,Colecalciferol,151597
+202306,Esomeprazole,152097
+202306,Paracetamol,150940
+202306,Acetylsalicylic Acid,153018
+202306,Bisoprolol,125363
+202306,Rosuvastatin,95357
+202306,Salbutamol (Inhaled),103398
+202306,Pantoprazole,86520
+202306,Amlodipine,82019
+202306,Folic Acid,77431
+202306,Ramipril,73836
+202306,Sertraline,62237
+202307,Atorvastatin,196568
+202307,Levothyroxine Sodium,170841
+202307,Colecalciferol,150257
+202307,Esomeprazole,151401
+202307,Paracetamol,149177
+202307,Acetylsalicylic Acid,150986
+202307,Bisoprolol,124164
+202307,Rosuvastatin,94652
+202307,Salbutamol (Inhaled),98981
+202307,Pantoprazole,85985
+202307,Amlodipine,80880
+202307,Folic Acid,76959
+202307,Ramipril,73330
+202307,Sertraline,62190
+202308,Atorvastatin,203688
+202308,Levothyroxine Sodium,176556
+202308,Colecalciferol,156033
+202308,Esomeprazole,157478
+202308,Paracetamol,154663
+202308,Acetylsalicylic Acid,155457
+202308,Bisoprolol,128280
+202308,Rosuvastatin,98625
+202308,Salbutamol (Inhaled),100335
+202308,Pantoprazole,89029
+202308,Amlodipine,83677
+202308,Folic Acid,79521
+202308,Ramipril,75940
+202308,Sertraline,64797
+202309,Atorvastatin,198338
+202309,Levothyroxine Sodium,171545
+202309,Colecalciferol,152432
+202309,Esomeprazole,152987
+202309,Paracetamol,150392
+202309,Acetylsalicylic Acid,150492
+202309,Bisoprolol,124486
+202309,Rosuvastatin,95917
+202309,Salbutamol (Inhaled),99923
+202309,Pantoprazole,86661
+202309,Amlodipine,81092
+202309,Folic Acid,77636
+202309,Ramipril,73704
+202309,Sertraline,62925
+202309,Amoxicillin,50358
+202310,Atorvastatin,199483
+202310,Levothyroxine Sodium,171032
+202310,Colecalciferol,154859
+202310,Esomeprazole,152822
+202310,Paracetamol,150564
+202310,Acetylsalicylic Acid,150050
+202310,Bisoprolol,124724
+202310,Rosuvastatin,95978
+202310,Salbutamol (Inhaled),100724
+202310,Pantoprazole,87098
+202310,Amlodipine,81197
+202310,Folic Acid,77623
+202310,Ramipril,73949
+202310,Sertraline,63265
+202310,Amoxicillin,60708
+202311,Atorvastatin,204948
+202311,Levothyroxine Sodium,174698
+202311,Colecalciferol,160609
+202311,Esomeprazole,157629
+202311,Paracetamol,155551
+202311,Acetylsalicylic Acid,152967
+202311,Bisoprolol,127916
+202311,Rosuvastatin,98925
+202311,Salbutamol (Inhaled),105714
+202311,Pantoprazole,89631
+202311,Amlodipine,83622
+202311,Folic Acid,79806
+202311,Ramipril,75796
+202311,Sertraline,66036
+202311,Amoxicillin,69673
+202312,Atorvastatin,207546
+202312,Levothyroxine Sodium,176082
+202312,Colecalciferol,162147
+202312,Esomeprazole,159071
+202312,Paracetamol,157879
+202312,Acetylsalicylic Acid,153802
+202312,Bisoprolol,129160
+202312,Rosuvastatin,99699
+202312,Salbutamol (Inhaled),106904
+202312,Pantoprazole,90505
+202312,Amlodipine,84178
+202312,Folic Acid,79356
+202312,Ramipril,76065
+202312,Sertraline,65015
+202312,Amoxicillin,84346
