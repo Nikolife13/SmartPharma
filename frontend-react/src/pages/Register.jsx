@@ -9,8 +9,10 @@ export default function Register() {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState('PHARMACIST');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
@@ -19,6 +21,9 @@ export default function Register() {
   const validate = () => {
     const nextErrors = {};
     if (!username.trim()) nextErrors.username = 'Username is required.';
+    if (role === 'SUPPLIER' && !email.trim()) {
+      nextErrors.email = 'Email is required for supplier accounts.';
+    }
     if (!password) {
       nextErrors.password = 'Password is required.';
     } else if (password.length < 6) {
@@ -38,8 +43,8 @@ export default function Register() {
 
     setSubmitting(true);
     try {
-      await register(username, password);
-      navigate('/dashboard');
+      const data = await register(username, password, role, email || undefined);
+      navigate(data.role === 'SUPPLIER' ? '/supplier/orders' : '/dashboard');
     } catch (error) {
       setFormError(error.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
@@ -56,8 +61,8 @@ export default function Register() {
           </div>
           <h2 className="text-2xl font-bold text-ink">Join SmartPharma today.</h2>
           <p className="text-sm text-muted">
-            Create an account as a Pharmacist or Manager to start managing inventory and
-            catching stock issues before they become problems.
+            Create an account as a Pharmacist, Manager, or Supplier to start managing
+            inventory and catching stock issues before they become problems.
           </p>
           <svg viewBox="0 0 200 160" className="mt-4 h-40 w-full text-primary/20">
             <circle cx="100" cy="80" r="60" fill="currentColor" />
@@ -88,6 +93,38 @@ export default function Register() {
                 autoComplete="username"
               />
             </FormField>
+
+            <FormField label="I am a...">
+              <select
+                value={role}
+                onChange={(event) => setRole(event.target.value)}
+                className={inputClasses(false)}
+              >
+                <option value="PHARMACIST">Pharmacist</option>
+                <option value="MANAGER">Manager</option>
+                <option value="SUPPLIER">Supplier</option>
+              </select>
+            </FormField>
+
+            {role === 'SUPPLIER' && (
+              <>
+                <FormField label="Email" error={errors.email}>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    onBlur={validate}
+                    className={inputClasses(Boolean(errors.email))}
+                    placeholder="you@supplier.com"
+                    autoComplete="email"
+                  />
+                </FormField>
+                <p className="mb-4 -mt-2 rounded-control border border-primary/20 bg-primary/5 px-3 py-2 text-xs text-muted">
+                  Supplier accounts need approval from a SmartPharma manager before you can
+                  view or respond to orders.
+                </p>
+              </>
+            )}
 
             <FormField label="Password" error={errors.password}>
               <div className="relative">
