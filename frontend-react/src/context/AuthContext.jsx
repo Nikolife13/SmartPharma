@@ -7,14 +7,21 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [username, setUsername] = useState(localStorage.getItem('username'));
   const [role, setRole] = useState(localStorage.getItem('role'));
+  const [supplierStatus, setSupplierStatus] = useState(localStorage.getItem('supplierStatus'));
 
   const persistSession = (data) => {
     localStorage.setItem('token', data.token);
     localStorage.setItem('username', data.username);
     localStorage.setItem('role', data.role);
+    if (data.supplierStatus) {
+      localStorage.setItem('supplierStatus', data.supplierStatus);
+    } else {
+      localStorage.removeItem('supplierStatus');
+    }
     setToken(data.token);
     setUsername(data.username);
     setRole(data.role);
+    setSupplierStatus(data.supplierStatus || null);
   };
 
   const login = async (usernameInput, password) => {
@@ -23,8 +30,8 @@ export function AuthProvider({ children }) {
     return data;
   };
 
-  const register = async (usernameInput, password) => {
-    const { data } = await authService.register(usernameInput, password);
+  const register = async (usernameInput, password, roleInput, email) => {
+    const { data } = await authService.register(usernameInput, password, roleInput, email);
     persistSession(data);
     return data;
   };
@@ -33,9 +40,11 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('role');
+    localStorage.removeItem('supplierStatus');
     setToken(null);
     setUsername(null);
     setRole(null);
+    setSupplierStatus(null);
   };
 
   const value = useMemo(
@@ -43,13 +52,16 @@ export function AuthProvider({ children }) {
       token,
       username,
       role,
+      supplierStatus,
       isAuthenticated: Boolean(token),
       isManager: role === 'MANAGER',
+      isSupplier: role === 'SUPPLIER',
+      isSupplierActive: role === 'SUPPLIER' && supplierStatus === 'ACTIVE',
       login,
       register,
       logout,
     }),
-    [token, username, role]
+    [token, username, role, supplierStatus]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
