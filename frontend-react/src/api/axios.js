@@ -21,6 +21,7 @@ api.interceptors.response.use(
       localStorage.removeItem('token');
       localStorage.removeItem('username');
       localStorage.removeItem('role');
+      localStorage.removeItem('supplierStatus');
       if (window.location.pathname !== '/login') {
         window.location.href = '/login';
       }
