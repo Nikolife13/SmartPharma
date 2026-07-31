@@ -9,10 +9,13 @@ import Dashboard from './pages/Dashboard';
 import Inventory from './pages/Inventory';
 import Orders from './pages/Orders';
 import Analytics from './pages/Analytics';
+import SupplierOrders from './pages/SupplierOrders';
+import SupplierApprovals from './pages/SupplierApprovals';
 
 function GuestRoute({ children }) {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
+  const { isAuthenticated, isSupplier } = useAuth();
+  if (!isAuthenticated) return children;
+  return <Navigate to={isSupplier ? '/supplier/orders' : '/dashboard'} replace />;
 }
 
 export default function App() {
@@ -63,12 +66,34 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/manager/suppliers"
+                element={
+                  <ProtectedRoute managerOnly>
+                    <SupplierApprovals />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/supplier/orders"
+                element={
+                  <ProtectedRoute supplierOnly>
+                    <SupplierOrders />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
 
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<HomeRedirect />} />
           </Routes>
         </BrowserRouter>
       </ToastProvider>
     </AuthProvider>
   );
+}
+
+function HomeRedirect() {
+  const { isAuthenticated, isSupplier } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return <Navigate to={isSupplier ? '/supplier/orders' : '/dashboard'} replace />;
 }
