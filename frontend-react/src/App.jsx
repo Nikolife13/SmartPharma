@@ -48,8 +48,22 @@ export default function App() {
                 </ProtectedRoute>
               }
             >
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/inventory" element={<Inventory />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute blockSupplier>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/inventory"
+                element={
+                  <ProtectedRoute blockSupplier>
+                    <Inventory />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/orders"
                 element={
