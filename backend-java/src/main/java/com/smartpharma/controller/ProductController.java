@@ -7,6 +7,7 @@ import com.smartpharma.model.User;
 import com.smartpharma.repository.UserRepository;
 import com.smartpharma.service.ProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
+@PreAuthorize("hasAnyRole('MANAGER', 'PHARMACIST')")
 public class ProductController {
 
     private final ProductService productService;

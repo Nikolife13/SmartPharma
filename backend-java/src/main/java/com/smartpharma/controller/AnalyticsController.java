@@ -2,6 +2,7 @@ package com.smartpharma.controller;
 
 import com.smartpharma.dto.AnalyticsSummary;
 import com.smartpharma.service.AnalyticsService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/analytics")
+@PreAuthorize("hasRole('MANAGER')")
 public class AnalyticsController {
 
     private final AnalyticsService analyticsService;
