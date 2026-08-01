@@ -10,7 +10,7 @@ const navLinkClasses = ({ isActive }) =>
   }`;
 
 export default function Navbar() {
-  const { username, role, isManager, logout } = useAuth();
+  const { username, role, isManager, isSupplier, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface shadow-soft">
@@ -20,25 +20,40 @@ export default function Navbar() {
             SmartPharma
           </span>
           <nav className="hidden items-center gap-1 md:flex">
-            <NavLink to="/dashboard" className={navLinkClasses}>
-              <IconDashboard className="h-4 w-4" />
-              Dashboard
-            </NavLink>
-            <NavLink to="/inventory" className={navLinkClasses}>
-              <IconInventory className="h-4 w-4" />
-              Inventory
-            </NavLink>
-            {isManager && (
-              <NavLink to="/orders" className={navLinkClasses}>
+            {isSupplier ? (
+              <NavLink to="/supplier/orders" className={navLinkClasses}>
                 <IconOrders className="h-4 w-4" />
-                Orders
+                Incoming Orders
               </NavLink>
-            )}
-            {isManager && (
-              <NavLink to="/analytics" className={navLinkClasses}>
-                <IconAnalytics className="h-4 w-4" />
-                Analytics
-              </NavLink>
+            ) : (
+              <>
+                <NavLink to="/dashboard" className={navLinkClasses}>
+                  <IconDashboard className="h-4 w-4" />
+                  Dashboard
+                </NavLink>
+                <NavLink to="/inventory" className={navLinkClasses}>
+                  <IconInventory className="h-4 w-4" />
+                  Inventory
+                </NavLink>
+                {isManager && (
+                  <NavLink to="/orders" className={navLinkClasses}>
+                    <IconOrders className="h-4 w-4" />
+                    Orders
+                  </NavLink>
+                )}
+                {isManager && (
+                  <NavLink to="/analytics" className={navLinkClasses}>
+                    <IconAnalytics className="h-4 w-4" />
+                    Analytics
+                  </NavLink>
+                )}
+                {isManager && (
+                  <NavLink to="/manager/suppliers" className={navLinkClasses}>
+                    <IconInventory className="h-4 w-4" />
+                    Supplier Approvals
+                  </NavLink>
+                )}
+              </>
             )}
           </nav>
         </div>
@@ -70,25 +85,40 @@ export default function Navbar() {
 
       {/* Mobile nav row */}
       <nav className="flex items-center gap-1 overflow-x-auto border-t border-border px-4 py-2 md:hidden">
-        <NavLink to="/dashboard" className={navLinkClasses}>
-          <IconDashboard className="h-4 w-4" />
-          Dashboard
-        </NavLink>
-        <NavLink to="/inventory" className={navLinkClasses}>
-          <IconInventory className="h-4 w-4" />
-          Inventory
-        </NavLink>
-        {isManager && (
-          <NavLink to="/orders" className={navLinkClasses}>
+        {isSupplier ? (
+          <NavLink to="/supplier/orders" className={navLinkClasses}>
             <IconOrders className="h-4 w-4" />
-            Orders
+            Incoming Orders
           </NavLink>
-        )}
-        {isManager && (
-          <NavLink to="/analytics" className={navLinkClasses}>
-            <IconAnalytics className="h-4 w-4" />
-            Analytics
-          </NavLink>
+        ) : (
+          <>
+            <NavLink to="/dashboard" className={navLinkClasses}>
+              <IconDashboard className="h-4 w-4" />
+              Dashboard
+            </NavLink>
+            <NavLink to="/inventory" className={navLinkClasses}>
+              <IconInventory className="h-4 w-4" />
+              Inventory
+            </NavLink>
+            {isManager && (
+              <NavLink to="/orders" className={navLinkClasses}>
+                <IconOrders className="h-4 w-4" />
+                Orders
+              </NavLink>
+            )}
+            {isManager && (
+              <NavLink to="/analytics" className={navLinkClasses}>
+                <IconAnalytics className="h-4 w-4" />
+                Analytics
+              </NavLink>
+            )}
+            {isManager && (
+              <NavLink to="/manager/suppliers" className={navLinkClasses}>
+                <IconInventory className="h-4 w-4" />
+                Suppliers
+              </NavLink>
+            )}
+          </>
         )}
       </nav>
     </header>
