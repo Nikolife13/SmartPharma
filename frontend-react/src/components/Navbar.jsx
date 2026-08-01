@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { IconDashboard, IconInventory, IconOrders, IconAnalytics, IconBell } from './icons';
+import logo from '../assets/Logo.png';
 
 const navLinkClasses = ({ isActive }) =>
   `flex items-center gap-2 rounded-control px-3 py-2 text-sm font-medium transition-colors ${
@@ -16,9 +17,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 border-b border-border bg-surface shadow-soft">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-8">
-          <span className="text-xl font-extrabold tracking-tight text-primary">
-            SmartPharma
-          </span>
+          <img src={logo} alt="SmartPharma" className="h-11 w-auto" />
           <nav className="hidden items-center gap-1 md:flex">
             {isSupplier ? (
               <NavLink to="/supplier/orders" className={navLinkClasses}>

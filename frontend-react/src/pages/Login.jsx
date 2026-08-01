@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import FormField, { inputClasses } from '../components/FormField';
 import { IconEye, IconEyeOff } from '../components/icons';
+import logo from '../assets/Logo.png';
+import formImage from '../assets/smart-pharma-form.png';
 
 export default function Login() {
   const { login } = useAuth();
@@ -44,20 +46,17 @@ export default function Login() {
       <div className="grid w-full max-w-4xl overflow-hidden rounded-card bg-surface shadow-card md:grid-cols-2">
         {/* Illustration side */}
         <div className="hidden flex-col justify-center gap-4 bg-primary/5 p-10 md:flex">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-2xl font-extrabold text-white">
-            +
-          </div>
+          <img src={logo} alt="SmartPharma" className="w-40" />
           <h2 className="text-2xl font-bold text-ink">Pharmacy inventory, simplified.</h2>
           <p className="text-sm text-muted">
             Track stock levels, catch expiring medicine early, and keep your pharmacy
             running smoothly with SmartPharma.
           </p>
-          <svg viewBox="0 0 200 160" className="mt-4 h-40 w-full text-primary/20">
-            <rect x="10" y="20" width="180" height="120" rx="12" fill="currentColor" />
-            <rect x="30" y="45" width="60" height="10" rx="4" className="fill-primary/40" />
-            <rect x="30" y="65" width="100" height="10" rx="4" className="fill-primary/40" />
-            <rect x="30" y="85" width="80" height="10" rx="4" className="fill-primary/40" />
-          </svg>
+          <img
+            src={formImage}
+            alt=""
+            className="mt-4 h-40 w-full rounded-2xl object-cover"
+          />
         </div>
 
         {/* Form side */}

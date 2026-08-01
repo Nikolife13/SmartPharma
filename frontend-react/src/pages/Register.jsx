@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import FormField, { inputClasses } from '../components/FormField';
 import { IconEye, IconEyeOff } from '../components/icons';
+import logo from '../assets/Logo.png';
+import formImage from '../assets/smart-pharma-form.png';
 
 export default function Register() {
   const { register } = useAuth();
@@ -56,19 +58,17 @@ export default function Register() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="grid w-full max-w-4xl overflow-hidden rounded-card bg-surface shadow-card md:grid-cols-2">
         <div className="hidden flex-col justify-center gap-4 bg-primary/5 p-10 md:flex">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-2xl font-extrabold text-white">
-            +
-          </div>
+          <img src={logo} alt="SmartPharma" className="w-56" />
           <h2 className="text-2xl font-bold text-ink">Join SmartPharma today.</h2>
           <p className="text-sm text-muted">
             Create an account as a Pharmacist, Manager, or Supplier to start managing
             inventory and catching stock issues before they become problems.
           </p>
-          <svg viewBox="0 0 200 160" className="mt-4 h-40 w-full text-primary/20">
-            <circle cx="100" cy="80" r="60" fill="currentColor" />
-            <circle cx="100" cy="65" r="18" className="fill-primary/50" />
-            <rect x="65" y="95" width="70" height="35" rx="17" className="fill-primary/50" />
-          </svg>
+          <img
+            src={formImage}
+            alt=""
+            className="mt-4 h-40 w-full rounded-2xl object-cover"
+          />
         </div>
 
         <div className="p-8 sm:p-10">
