@@ -35,6 +35,38 @@ def _r_squared(actual, predicted):
     return 1 - ss_res / ss_tot
 
 
+def predict_daily_series(sales, drug_name, horizon_days=FORECAST_HORIZON_DAYS):
+    """
+    Fits a linear trend on `sales` (a list of DailySale, already sorted by date)
+    and returns the clipped, seasonally-adjusted predicted quantity for each of
+    the next `horizon_days` calendar days after the last historical day.
+
+    Pulled out of forecast() so the same fit-and-predict logic can be reused by
+    the offline backtest (scripts/backtest.py), which needs day-by-day
+    predictions to compare against actual holdout data - not just the 30-day total.
+    """
+    day_index = np.arange(len(sales)).reshape(-1, 1)
+    quantities = np.array([s.quantity for s in sales])
+
+    model = LinearRegression()
+    model.fit(day_index, quantities)
+
+    # Trend (regression) x real seasonal index: the line captures overall growth,
+    # then each forecasted day is scaled by how that calendar month actually
+    # behaves for this specific drug nationally (flat 1.0 where PCRS has no data).
+    drug_seasonal = SEASONAL_INDEX.get(drug_name.lower(), {})
+    last_date = sales[-1].date
+
+    future_days = np.arange(len(sales), len(sales) + horizon_days).reshape(-1, 1)
+    trend_predicted = model.predict(future_days)
+    seasonal_multipliers = np.array([
+        drug_seasonal.get((last_date + timedelta(days=offset)).month, 1.0)
+        for offset in range(1, horizon_days + 1)
+    ])
+
+    return np.clip(trend_predicted * seasonal_multipliers, a_min=0, a_max=None)
+
+
 def forecast(history: ProductHistory) -> PredictionResult:
     """
     Predicts 30-day demand for one product: fits a linear trend on its daily
@@ -61,20 +93,9 @@ def forecast(history: ProductHistory) -> PredictionResult:
     model = LinearRegression()
     model.fit(day_index, quantities)
 
-    # Trend (regression) x real seasonal index: the line captures overall growth,
-    # then each forecasted day is scaled by how that calendar month actually
-    # behaves for this specific drug nationally (flat 1.0 where PCRS has no data).
     drug_seasonal = SEASONAL_INDEX.get(history.name.lower(), {})
-    last_date = sales[-1].date
 
-    future_days = np.arange(len(sales), len(sales) + FORECAST_HORIZON_DAYS).reshape(-1, 1)
-    trend_predicted = model.predict(future_days)
-    seasonal_multipliers = np.array([
-        drug_seasonal.get((last_date + timedelta(days=offset)).month, 1.0)
-        for offset in range(1, FORECAST_HORIZON_DAYS + 1)
-    ])
-
-    predicted_daily = np.clip(trend_predicted * seasonal_multipliers, a_min=0, a_max=None)
+    predicted_daily = predict_daily_series(sales, history.name, FORECAST_HORIZON_DAYS)
     forecasted_demand = int(round(predicted_daily.sum()))
 
     suggested_qty = max(0, forecasted_demand + history.minThreshold - history.currentQuantity)
