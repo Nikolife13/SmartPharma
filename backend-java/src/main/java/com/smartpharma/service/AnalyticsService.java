@@ -19,10 +19,12 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+// Builds the three charts on the Analytics page, all from the same raw
+// InventoryTransaction table - no separate aggregation tables or scheduled jobs.
 @Service
 public class AnalyticsService {
 
-    public enum Period { WEEKLY, MONTHLY }
+    public enum Period { WEEKLY, MONTHLY, YEARLY }
 
     private static final int TOP_PRODUCT_LIMIT = 8;
     private static final DateTimeFormatter MONTH_LABEL = DateTimeFormatter.ofPattern("MMM yyyy", Locale.ENGLISH);
@@ -43,6 +45,8 @@ public class AnalyticsService {
         );
     }
 
+    // Groups SALE transactions into week/month/year buckets and sums each one.
+    // TreeMap keeps buckets sorted chronologically for free (bucketKey sorts as text).
     private List<TrendPoint> buildSalesTrend(List<InventoryTransaction> transactions, Period period) {
         Map<String, Integer> totalsByBucket = new TreeMap<>();
 
@@ -67,16 +71,20 @@ public class AnalyticsService {
             int weekYear = date.get(weekFields.weekBasedYear());
             return String.format("%04d-W%02d", weekYear, week);
         }
+        if (period == Period.YEARLY) {
+            return String.valueOf(date.getYear());
+        }
         return YearMonth.from(date).toString();
     }
 
     private String displayLabel(String bucketKey, Period period) {
-        if (period == Period.WEEKLY) {
+        if (period == Period.WEEKLY || period == Period.YEARLY) {
             return bucketKey;
         }
         return YearMonth.parse(bucketKey).format(MONTH_LABEL);
     }
 
+    // Ranks products by total units sold (all time) and keeps only the top N for the chart.
     private List<ProductTotal> buildTopProducts(List<InventoryTransaction> transactions) {
         Map<String, Integer> totalsByProduct = transactions.stream()
                 .filter(txn -> txn.getReason() == InventoryTransaction.Reason.SALE)
@@ -92,6 +100,7 @@ public class AnalyticsService {
                 .collect(Collectors.toList());
     }
 
+    // Counts every transaction (SALE/RESTOCK/EXPIRED, not just sales) for the donut chart.
     private List<ReasonCount> buildReasonBreakdown(List<InventoryTransaction> transactions) {
         Map<InventoryTransaction.Reason, Long> countsByReason = transactions.stream()
                 .collect(Collectors.groupingBy(InventoryTransaction::getReason, Collectors.counting()));

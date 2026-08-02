@@ -35,6 +35,9 @@ function ChartCard({ title, loading, children }) {
   );
 }
 
+// Manager-only Sales Analytics page: three Chart.js charts (trend line, top
+// products bar, transaction-reason donut) all fed by one /analytics/summary call
+// that re-fetches whenever the weekly/monthly/yearly period toggle changes.
 export default function Analytics() {
   const { showToast } = useToast();
   const [period, setPeriod] = useState('monthly');
@@ -113,7 +116,7 @@ export default function Analytics() {
           <p className="mt-1 text-sm text-muted">Trends from recorded stock movements.</p>
         </div>
         <div className="inline-flex rounded-control border border-border bg-surface p-1">
-          {['weekly', 'monthly'].map((option) => (
+          {['weekly', 'monthly', 'yearly'].map((option) => (
             <button
               key={option}
               type="button"

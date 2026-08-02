@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+// Backs the three Analytics charts. Manager-only - a Pharmacist can operate stock
+// but doesn't need business-level sales analytics.
 @RestController
 @RequestMapping("/api/analytics")
 @PreAuthorize("hasRole('MANAGER')")
@@ -21,9 +23,14 @@ public class AnalyticsController {
 
     @GetMapping("/summary")
     public AnalyticsSummary getSummary(@RequestParam(defaultValue = "monthly") String period) {
-        AnalyticsService.Period parsed = "weekly".equalsIgnoreCase(period)
-                ? AnalyticsService.Period.WEEKLY
-                : AnalyticsService.Period.MONTHLY;
+        AnalyticsService.Period parsed;
+        if ("weekly".equalsIgnoreCase(period)) {
+            parsed = AnalyticsService.Period.WEEKLY;
+        } else if ("yearly".equalsIgnoreCase(period)) {
+            parsed = AnalyticsService.Period.YEARLY;
+        } else {
+            parsed = AnalyticsService.Period.MONTHLY;
+        }
         return analyticsService.getSummary(parsed);
     }
 }
