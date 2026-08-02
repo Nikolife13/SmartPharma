@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// Manager-only supplier account administration: list pending/active suppliers
+// and approve or reject them. Suppliers themselves never call this - see OrderController.
 @Service
 public class SupplierService {
 
@@ -16,6 +18,7 @@ public class SupplierService {
         this.userRepository = userRepository;
     }
 
+    // statusFilter is optional - pass null/blank to list every supplier regardless of status.
     public List<SupplierSummary> listSuppliers(String statusFilter) {
         List<User> suppliers = userRepository.findByRole(User.Role.SUPPLIER);
         return suppliers.stream()

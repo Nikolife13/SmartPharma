@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+// One product's forecast result as returned by the ML service.
 public class MlPredictionResult {
     private Long productId;
     private Integer forecastedDemand30d;

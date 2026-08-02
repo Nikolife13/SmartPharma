@@ -6,6 +6,8 @@ import { SkeletonRows } from '../components/Skeleton';
 import { IconOrders } from '../components/icons';
 import { formatDate } from '../utils/dates';
 
+// Supplier-only "Incoming Orders" page. Gated on isSupplierActive - a PENDING
+// supplier sees only PendingApprovalScreen below, never real order data.
 function orderStatusBadgeClass(status) {
   if (status === 'APPROVED') return 'bg-success/10 text-success';
   if (status === 'PARTIALLY_APPROVED') return 'bg-accent/20 text-ink';
@@ -28,6 +30,9 @@ function PendingApprovalScreen() {
   );
 }
 
+// Starting point for the "respond to this order" form - defaults every item to
+// available at its full requested quantity, since that's the common case; the
+// supplier only needs to touch the items that are actually a problem.
 function initDraft(order) {
   const items = {};
   order.items.forEach((item) => {

@@ -1,3 +1,5 @@
+// True if expiryDate falls within the next `withinDays` days (or is already past).
+// Drives the "near expiry" highlighting on Inventory/Dashboard.
 export function isNearExpiry(expiryDate, withinDays = 30) {
   const diffMs = new Date(expiryDate) - new Date();
   const diffDays = diffMs / (1000 * 60 * 60 * 24);

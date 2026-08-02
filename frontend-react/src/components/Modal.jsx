@@ -1,5 +1,7 @@
 import { IconClose } from './icons';
 
+// Generic centered dialog shell (backdrop + card + close button) - AddProductModal
+// and StockModal both render their form inside this rather than duplicating the chrome.
 export default function Modal({ title, onClose, children }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4 animate-fadeIn">

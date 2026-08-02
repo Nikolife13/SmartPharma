@@ -6,6 +6,8 @@ import { IconEye, IconEyeOff } from '../components/icons';
 import logo from '../assets/Logo.png';
 import formImage from '../assets/smart-pharma-form.png';
 
+// Sign-in form for all three roles - the backend response's role/supplierStatus
+// decides where AuthContext routes the user after login.
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();

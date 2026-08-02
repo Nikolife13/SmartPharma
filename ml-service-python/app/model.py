@@ -36,6 +36,11 @@ def _r_squared(actual, predicted):
 
 
 def forecast(history: ProductHistory) -> PredictionResult:
+    """
+    Predicts 30-day demand for one product: fits a linear trend on its daily
+    sales, then scales each forecasted day by that drug's real seasonal index
+    for the matching calendar month (trend x seasonal decomposition).
+    """
     sales = sorted(history.dailySales, key=lambda s: s.date)
 
     if len(sales) < MIN_HISTORY_DAYS:

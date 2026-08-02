@@ -3,6 +3,9 @@ package com.smartpharma.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+// A single login account. The same table holds all three actor types (Pharmacist,
+// Manager, Supplier) - role decides what they can do (see SecurityConfig/@PreAuthorize
+// checks), and supplierStatus is the extra approval gate that only applies to suppliers.
 @Entity
 @Table(name = "users")
 @Data
@@ -37,6 +40,8 @@ public class User {
         SUPPLIER
     }
 
+    // Only meaningful when role == SUPPLIER; PENDING until a Manager approves the
+    // account, and every supplier-facing endpoint checks this before allowing access.
     public enum SupplierStatus {
         PENDING,
         ACTIVE,

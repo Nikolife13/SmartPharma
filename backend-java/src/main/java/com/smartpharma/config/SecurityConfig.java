@@ -31,11 +31,14 @@ public class SecurityConfig {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
+    // Base rule: only /api/auth/** (login/register) is open; everything else just
+    // requires SOME valid login. The finer-grained per-role checks (Manager only,
+    // Supplier only, etc.) live as @PreAuthorize annotations on each controller.
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable()) // no cookies/sessions involved, only bearer JWTs
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
@@ -46,6 +49,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Lets the React dev server / deployed frontend (a different origin) call this API.
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         List<String> origins = Arrays.stream(allowedOrigins.split(","))

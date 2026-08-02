@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// Owns the two things that change together: a product's live stock count, and
+// the audit trail of why it changed (InventoryTransaction rows).
 @Service
 public class ProductService {
 
@@ -37,6 +39,9 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    // Applies a manual stock change (sale, restock, or expiry write-off) and records
+    // it as a transaction in the same call, so current_quantity and the audit trail
+    // never drift apart.
     public Product updateStock(Long productId, StockUpdateRequest request, User user) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -48,7 +53,7 @@ public class ProductService {
         int newQuantity = product.getCurrentQuantity() + change;
         product.setCurrentQuantity(newQuantity);
 
-        // Создаём запись о транзакции
+        // Record the transaction so this change shows up in Analytics/ML history.
         InventoryTransaction txn = new InventoryTransaction();
         txn.setProduct(product);
         txn.setUser(user);

@@ -6,6 +6,8 @@ import { SkeletonRows } from '../components/Skeleton';
 import { formatDate } from '../utils/dates';
 import dashboardBanner from '../assets/dashboard-banner.png';
 
+// Home page after login: shows what needs attention right now (low stock, near-expiry
+// products) and polls the backend every 30s so it stays current without a manual refresh.
 const REFRESH_INTERVAL_MS = 30000;
 
 export default function Dashboard() {

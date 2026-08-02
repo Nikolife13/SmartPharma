@@ -4,6 +4,9 @@ import FormField, { inputClasses } from './FormField';
 
 const REASONS = ['SALE', 'EXPIRED', 'RESTOCK'];
 
+// One form handles both directions - mode='in' adds stock (RESTOCK by default),
+// mode='out' removes it (SALE by default); the entered quantity is always positive
+// here and only gets negated for "out" right before calling onSubmit.
 export default function StockModal({ product, mode, onClose, onSubmit }) {
   const isStockIn = mode === 'in';
   const [quantity, setQuantity] = useState('');

@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+// Read-only ML reorder suggestions ("what should I order and how much"). Kept
+// separate from OrderController, which owns the actual persisted order workflow -
+// this one never touches the orders/order_items tables.
 @RestController
 @RequestMapping("/api/orders")
 @PreAuthorize("hasRole('MANAGER')")

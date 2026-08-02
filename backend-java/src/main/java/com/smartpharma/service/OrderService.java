@@ -18,6 +18,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+// The core of the supplier order workflow: a Manager creates an order, the
+// Supplier responds item-by-item, and the resulting status is always derived
+// from those item responses - never set directly by either side.
 @Service
 public class OrderService {
 
@@ -36,12 +39,15 @@ public class OrderService {
         this.emailService = emailService;
     }
 
+    // Manager-only. Snapshots each product's current name onto its OrderItem (see
+    // OrderItem.productName) and fires an email notification once the order is saved.
     @Transactional
     public OrderResponse createOrder(CreateOrderRequest request, User manager) {
         if (request.getItems() == null || request.getItems().isEmpty()) {
             throw new RuntimeException("Order must contain at least one item");
         }
 
+        // Can only order from a supplier a Manager has already approved.
         User supplier = userRepository.findById(request.getSupplierId())
                 .filter(u -> u.getRole() == User.Role.SUPPLIER)
                 .orElseThrow(() -> new RuntimeException("Supplier not found"));
@@ -72,6 +78,9 @@ public class OrderService {
         return toResponse(saved);
     }
 
+    // Each role only ever sees its own orders - a Manager gets what they created,
+    // a Supplier gets what was sent to them. The requester comes from the JWT, never
+    // a client-supplied id, so nobody can list someone else's orders.
     public List<OrderResponse> getOrdersForUser(User requester) {
         List<Order> orders = switch (requester.getRole()) {
             case MANAGER -> orderRepository.findByCreatedByOrderByCreatedAtDesc(requester);
@@ -88,6 +97,9 @@ public class OrderService {
         return toResponse(order);
     }
 
+    // Supplier-only, one-shot: an order can only be responded to once (must still be
+    // PENDING). Marks each item AVAILABLE/UNAVAILABLE, then derives the order's overall
+    // status from how those items landed - never trusts a status sent by the client.
     @Transactional
     public OrderResponse respondToOrder(Long orderId, RespondToOrderRequest request, User supplier) {
         Order order = orderRepository.findById(orderId)
@@ -113,6 +125,8 @@ public class OrderService {
             }
             if (update.isAvailable()) {
                 item.setStatus(OrderItem.Status.AVAILABLE);
+                // Supplier can confirm a smaller quantity than requested; default to
+                // the full requested amount if they didn't specify one.
                 item.setConfirmedQty(update.getConfirmedQty() != null ? update.getConfirmedQty() : item.getRequestedQty());
             } else {
                 item.setStatus(OrderItem.Status.UNAVAILABLE);
@@ -123,6 +137,7 @@ public class OrderService {
         order.setExpectedDeliveryDate(request.getExpectedDeliveryDate());
         order.setSupplierNote(request.getSupplierNote());
 
+        // All available -> APPROVED, some -> PARTIALLY_APPROVED, none -> REJECTED.
         boolean allAvailable = order.getItems().stream().allMatch(i -> i.getStatus() == OrderItem.Status.AVAILABLE);
         boolean anyAvailable = order.getItems().stream().anyMatch(i -> i.getStatus() == OrderItem.Status.AVAILABLE);
         order.setStatus(allAvailable ? Order.Status.APPROVED
@@ -133,6 +148,8 @@ public class OrderService {
         return toResponse(saved);
     }
 
+    // A Manager can view any order they created; a Supplier can only view orders
+    // addressed to them. Anyone else (or a mismatched owner) is rejected.
     private void assertCanView(Order order, User requester) {
         boolean isOwningManager = requester.getRole() == User.Role.MANAGER
                 && order.getCreatedBy().getId().equals(requester.getId());
@@ -143,6 +160,8 @@ public class OrderService {
         }
     }
 
+    // Maps the JPA entity to a plain DTO - deliberately never returns Order/User
+    // entities directly, since User carries the password hash.
     private OrderResponse toResponse(Order order) {
         List<OrderResponse.OrderItemResponse> items = order.getItems().stream()
                 .map(i -> new OrderResponse.OrderItemResponse(

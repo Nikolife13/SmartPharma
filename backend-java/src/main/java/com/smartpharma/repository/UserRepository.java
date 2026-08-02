@@ -19,6 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     boolean existsByUsername(String username);
 
+    // Used by SupplierService to list every supplier account, optionally filtered by status.
     List<User> findByRole(User.Role role);
 
     List<User> findByRoleAndSupplierStatus(User.Role role, User.SupplierStatus supplierStatus);

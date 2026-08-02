@@ -1,5 +1,7 @@
 import api from './axios';
 
+// One thin wrapper object per backend controller - keeps every raw endpoint path
+// in this single file instead of scattered across pages/components.
 export const authService = {
   login: (username, password) => api.post('/auth/login', { username, password }),
   register: (username, password, role, email) =>
@@ -18,6 +20,8 @@ export const dashboardService = {
 };
 
 export const ordersService = {
+  // ML-generated reorder suggestions (read-only) - separate from the real order
+  // workflow below, mirroring the OrdersController/OrderController split on the backend.
   getSuggestions: () => api.get('/orders/suggestions'),
   create: (supplierId, items) => api.post('/orders', { supplierId, items }),
   getAll: () => api.get('/orders'),

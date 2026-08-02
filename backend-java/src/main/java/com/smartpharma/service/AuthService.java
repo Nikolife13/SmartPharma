@@ -46,6 +46,8 @@ public class AuthService {
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setRole(role);
+        // Suppliers self-register but can't act on anything until a Manager
+        // approves them - see SupplierService.updateStatus / OrderService's checks.
         if (role == User.Role.SUPPLIER) {
             user.setSupplierStatus(User.SupplierStatus.PENDING);
         }

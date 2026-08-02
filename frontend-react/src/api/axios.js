@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+// Single shared axios instance every api/services.js call goes through, so the
+// auth header and 401-handling below apply everywhere automatically.
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
 });

@@ -1,3 +1,5 @@
+// Label + input-slot + inline error wrapper reused by every form in the app, so
+// spacing/error styling stays consistent without repeating it per field.
 export default function FormField({ label, error, children }) {
   return (
     <div className="mb-4">

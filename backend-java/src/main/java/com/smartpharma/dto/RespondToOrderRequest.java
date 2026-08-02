@@ -5,6 +5,8 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.List;
 
+// Body of POST /api/orders/{id}/respond - the supplier confirming what they can
+// actually deliver, item by item, plus a single delivery date for the whole order.
 @Data
 public class RespondToOrderRequest {
     private List<ItemResponse> items;

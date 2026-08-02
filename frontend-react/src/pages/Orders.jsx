@@ -5,6 +5,9 @@ import { SkeletonRows } from '../components/Skeleton';
 import { IconRobot } from '../components/icons';
 import { formatDate } from '../utils/dates';
 
+// Manager-only page, two halves: (1) generate ML reorder suggestions and turn a
+// selection of them into a real order sent to a chosen supplier, (2) track the
+// status of orders already sent (Sent Orders table at the bottom).
 function confidenceBadgeClass(score) {
   if (score >= 85) return 'bg-success/10 text-success';
   if (score >= 65) return 'bg-accent/20 text-ink';
@@ -82,6 +85,8 @@ export default function Orders() {
 
   const selectedCount = Object.values(selected).filter(Boolean).length;
 
+  // Builds the order from whichever suggestion rows are checked, using the
+  // (possibly manager-edited) quantity for each - falls back to the ML-suggested qty.
   const handleSendOrder = async () => {
     if (!supplierId) {
       showToast('Choose a supplier first.', 'error');

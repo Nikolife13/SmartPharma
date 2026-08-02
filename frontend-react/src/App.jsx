@@ -12,12 +12,18 @@ import Analytics from './pages/Analytics';
 import SupplierOrders from './pages/SupplierOrders';
 import SupplierApprovals from './pages/SupplierApprovals';
 
+// Opposite of ProtectedRoute: keeps a logged-in user off /login and /register by
+// bouncing them straight to their home page instead.
 function GuestRoute({ children }) {
   const { isAuthenticated, isSupplier } = useAuth();
   if (!isAuthenticated) return children;
   return <Navigate to={isSupplier ? '/supplier/orders' : '/dashboard'} replace />;
 }
 
+// Route table for the whole app. Nested inside the outer ProtectedRoute+AppLayout
+// route are all the logged-in pages; each one that needs a role restriction wraps
+// itself in a second, more specific ProtectedRoute (see the managerOnly/supplierOnly/
+// blockSupplier flags below).
 export default function App() {
   return (
     <AuthProvider>
@@ -106,6 +112,8 @@ export default function App() {
   );
 }
 
+// Catch-all for unmatched URLs and "/" - sends everyone to the right home page for
+// their role instead of a 404.
 function HomeRedirect() {
   const { isAuthenticated, isSupplier } = useAuth();
   if (!isAuthenticated) return <Navigate to="/login" replace />;

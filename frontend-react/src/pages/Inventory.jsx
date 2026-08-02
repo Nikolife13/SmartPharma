@@ -8,6 +8,9 @@ import { IconPlus, IconArrowUp, IconArrowDown, IconSearch } from '../components/
 import { formatDate, isNearExpiry } from '../utils/dates';
 import inventoryBanner from '../assets/inventory-banner.png';
 
+// Full product catalog with search, pagination, and manual stock in/out actions.
+// This is the Pharmacist/Manager view of stock - Suppliers never reach this page
+// (see App.jsx's blockSupplier route guard).
 const PAGE_SIZE = 20;
 
 export default function Inventory() {
@@ -38,6 +41,8 @@ export default function Inventory() {
     fetchProducts();
   }, []);
 
+  // Filter + paginate client-side - the product list is small enough that a
+  // dedicated search/pagination API isn't worth the extra round trips.
   const filteredProducts = useMemo(() => {
     const term = search.trim().toLowerCase();
     if (!term) return products;

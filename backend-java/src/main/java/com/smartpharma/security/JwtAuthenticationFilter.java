@@ -30,6 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.userRepository = userRepository;
     }
 
+    // Runs once per request, before any controller. Reads the "Bearer <token>"
+    // header, and if it's valid, looks the user up and stamps their role onto the
+    // Spring Security context as a "ROLE_X" authority - that's what makes
+    // @PreAuthorize("hasRole('MANAGER')") etc. work on controllers below.
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -53,7 +57,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (Exception e) {
-                // token invalid, proceed without authentication
+                // Missing/expired/malformed token - just leave the request unauthenticated
+                // and let Spring Security's own rules (below) reject it if needed.
             }
         }
         chain.doFilter(request, response);

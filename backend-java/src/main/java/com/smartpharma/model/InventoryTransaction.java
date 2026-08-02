@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
+// The audit trail for stock movements: every time a product's quantity changes,
+// one of these rows is written alongside it. This is also the raw data source
+// for both the ML forecasts (sales history) and the Analytics charts.
 @Entity
 @Table(name = "inventory_transactions")
 @Data
@@ -27,6 +30,7 @@ public class InventoryTransaction {
     @Column(nullable = false)
     private Reason reason;
 
+    // Negative for stock leaving (SALE, EXPIRED), positive for stock coming in (RESTOCK).
     @Column(name = "quantity_change", nullable = false)
     private Integer quantityChange;
 

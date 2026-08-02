@@ -3,6 +3,8 @@ import { supplierAdminService } from '../api/services';
 import { useToast } from '../context/ToastContext';
 import { SkeletonRows } from '../components/Skeleton';
 
+// Manager-only page for moderating supplier signups - approve turns a PENDING
+// supplier into ACTIVE (able to see/respond to orders), reject blocks them.
 function statusBadgeClass(status) {
   if (status === 'ACTIVE') return 'bg-success/10 text-success';
   if (status === 'REJECTED') return 'bg-danger/10 text-danger';

@@ -2,6 +2,7 @@ package com.smartpharma.dto;
 
 import lombok.Data;
 
+// Body of POST /api/auth/register.
 @Data
 public class RegisterRequest {
     private String username;

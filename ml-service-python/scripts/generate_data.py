@@ -61,6 +61,7 @@ PHARMACY_CATALOG = [
 ]
 
 
+# Inserts any catalog drugs that don't already exist by name - safe to re-run.
 def seed_products(cursor):
     inserted = 0
     for item in PHARMACY_CATALOG:
@@ -80,6 +81,7 @@ def seed_products(cursor):
         print("Product catalog already complete, nothing new to seed.")
 
 
+# Same MySQL instance the Java backend uses - env vars match its application.properties.
 def db_connection():
     return pymysql.connect(
         host=os.environ.get("DB_HOST", "localhost"),
@@ -92,6 +94,8 @@ def db_connection():
     )
 
 
+# Generates HISTORY_DAYS of daily SALE rows for one product (skipped if it already
+# has synthetic history in that window - see the COUNT(*) check just below).
 def seed_product(cursor, product, demand_weights, seasonal_index, system_user_id):
     cursor.execute(
         "SELECT COUNT(*) AS cnt FROM inventory_transactions "
@@ -112,6 +116,9 @@ def seed_product(cursor, product, demand_weights, seasonal_index, system_user_id
     for offset in range(HISTORY_DAYS, 0, -1):
         day = today - timedelta(days=offset)
         seasonal = drug_seasonal.get(day.month, 1.0)
+        # Poisson gives a random whole-number count around this day's expected
+        # rate (lam) - so the series looks like real day-to-day sales noise
+        # instead of a perfectly smooth curve.
         lam = max(0.1, base_rate * weight * seasonal)
         qty = int(np.random.poisson(lam=lam))
         if qty <= 0:
@@ -126,6 +133,7 @@ def seed_product(cursor, product, demand_weights, seasonal_index, system_user_id
     print(f"  {product['name']}: inserted {len(rows)} days of synthetic SALE history (weight={weight:.2f})")
 
 
+# Entry point: run as `python -m scripts.generate_data` from ml-service-python/.
 def main():
     demand_weights, seasonal_index = load_pcrs_data()
     print(f"Loaded PCRS demand weights for: {list(demand_weights.keys()) or 'none'}")

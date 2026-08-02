@@ -10,6 +10,8 @@ const initialForm = {
   currentQuantity: '',
 };
 
+// Form for creating a brand-new product. Purely presentational - Inventory.jsx
+// owns the actual save API call and passes it in as onSubmit.
 export default function AddProductModal({ onClose, onSubmit }) {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});

@@ -10,6 +10,10 @@ const navLinkClasses = ({ isActive }) =>
       : 'text-muted hover:bg-background hover:text-ink'
   }`;
 
+// Top bar shown on every logged-in page. Which links appear depends entirely on
+// role: Suppliers get a single "Incoming Orders" link, everyone else gets the
+// internal-staff nav (Dashboard/Inventory, plus Orders/Analytics/Supplier
+// Approvals for Managers only).
 export default function Navbar() {
   const { username, role, isManager, isSupplier, logout } = useAuth();
 

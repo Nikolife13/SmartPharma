@@ -1,12 +1,14 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 
+// Small global notification system: any component calls showToast() via useToast(),
+// and this provider renders the stacked pop-ups bottom-right and auto-dismisses them.
 const ToastContext = createContext(null);
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
   const showToast = useCallback((message, type = 'success') => {
-    const id = Date.now() + Math.random();
+    const id = Date.now() + Math.random(); // good enough uniqueness for a short-lived list
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((toast) => toast.id !== id));

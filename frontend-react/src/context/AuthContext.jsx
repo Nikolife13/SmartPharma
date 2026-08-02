@@ -1,6 +1,8 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import { authService } from '../api/services';
 
+// App-wide login state. Session is just a JWT + a few fields in localStorage (no
+// server-side sessions) - persisted here so a page refresh doesn't log the user out.
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -9,6 +11,8 @@ export function AuthProvider({ children }) {
   const [role, setRole] = useState(localStorage.getItem('role'));
   const [supplierStatus, setSupplierStatus] = useState(localStorage.getItem('supplierStatus'));
 
+  // Shared by both login and register - both return the same {token, username,
+  // role, supplierStatus} shape, so this is the one place session storage happens.
   const persistSession = (data) => {
     localStorage.setItem('token', data.token);
     localStorage.setItem('username', data.username);
@@ -56,6 +60,8 @@ export function AuthProvider({ children }) {
       isAuthenticated: Boolean(token),
       isManager: role === 'MANAGER',
       isSupplier: role === 'SUPPLIER',
+      // A Supplier who isn't ACTIVE yet is still "a supplier" for routing purposes
+      // (see App.jsx), but isSupplierActive gates the actual order data/actions.
       isSupplierActive: role === 'SUPPLIER' && supplierStatus === 'ACTIVE',
       login,
       register,

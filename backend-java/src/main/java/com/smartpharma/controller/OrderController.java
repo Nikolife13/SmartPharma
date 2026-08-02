@@ -54,6 +54,8 @@ public class OrderController {
         return orderService.respondToOrder(id, request, currentUser(auth));
     }
 
+    // Resolves the authenticated username (from the JWT) to a full User row, so
+    // service methods always know who's actually calling - never trust a client-sent id.
     private User currentUser(Authentication auth) {
         return userRepository.findByUsername(auth.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));

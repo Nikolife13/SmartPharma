@@ -58,9 +58,10 @@ public class JwtUtil {
         return extractAllClaims(token).getSubject();
     }
 
-    /**
-     * Validate a token: check if it belongs to the given username and is not expired.
-     */
+    // Checks the token belongs to this username and hasn't expired. Note the token
+    // itself carries no role/permission info, just the username and expiry -
+    // JwtAuthenticationFilter re-fetches the User row to get the current role, so a
+    // role change takes effect immediately without needing to reissue tokens.
     public boolean validateToken(String token, String username) {
         final String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Single endpoint for the Dashboard home page's two "needs attention" cards.
 @RestController
 @RequestMapping("/api/dashboard")
 @PreAuthorize("hasAnyRole('MANAGER', 'PHARMACIST')")

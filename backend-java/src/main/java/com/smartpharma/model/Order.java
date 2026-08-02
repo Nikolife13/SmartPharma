@@ -7,6 +7,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+// A purchase order a Manager sends to one Supplier, containing one or more
+// OrderItem lines. The supplier is the only one allowed to move it out of PENDING
+// (see OrderService.respondToOrder) - status is derived from how its items resolve,
+// not set directly.
 @Entity
 @Table(name = "orders")
 @Data
@@ -45,6 +49,8 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
+    // APPROVED = every item available, PARTIALLY_APPROVED = some available,
+    // REJECTED = none available. Computed in OrderService, never set by hand.
     public enum Status {
         PENDING,
         APPROVED,

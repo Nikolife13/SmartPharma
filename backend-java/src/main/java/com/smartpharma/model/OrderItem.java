@@ -3,6 +3,8 @@ package com.smartpharma.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+// One product line within an Order. productName is a snapshot taken when the order
+// was created, so the order still reads correctly even if the product is later renamed.
 @Entity
 @Table(name = "order_items")
 @Data
@@ -35,6 +37,7 @@ public class OrderItem {
     @Column(name = "confirmed_qty")
     private Integer confirmedQty;
 
+    // Set by the supplier when responding to the order; PENDING until then.
     public enum Status {
         PENDING,
         AVAILABLE,

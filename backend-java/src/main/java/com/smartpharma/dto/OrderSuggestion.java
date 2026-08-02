@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+// A single "you should reorder this" row shown on the Orders page, combining the
+// product's current stock with the ML service's forecast for it.
 public class OrderSuggestion {
     private Long productId;
     private String productName;

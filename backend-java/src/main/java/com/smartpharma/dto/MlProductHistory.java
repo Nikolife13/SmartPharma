@@ -9,6 +9,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+// A product's sales history, packaged for the ML service's /predict endpoint.
+// Built by PredictionClient from InventoryTransaction rows.
 public class MlProductHistory {
     private Long productId;
     private String name;

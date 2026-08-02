@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Product catalog + stock CRUD. Restricted to internal staff - Suppliers never see
+// this (they'd be looking at the pharmacy's own stock levels, which isn't their business).
 @RestController
 @RequestMapping("/api/products")
 @PreAuthorize("hasAnyRole('MANAGER', 'PHARMACIST')")

@@ -6,6 +6,8 @@ import { IconEye, IconEyeOff } from '../components/icons';
 import logo from '../assets/Logo.png';
 import formImage from '../assets/smart-pharma-form.png';
 
+// Self-service signup for all three roles. Supplier accounts additionally require
+// an email (for order notifications) and start PENDING until a Manager approves them.
 export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Manager-only supplier account moderation (list pending, approve/reject).
 @RestController
 @RequestMapping("/api/admin/suppliers")
 @PreAuthorize("hasRole('MANAGER')")

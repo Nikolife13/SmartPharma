@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
+// A single medicine/batch tracked in the pharmacy's stock. currentQuantity is the
+// live count on the shelf; it only ever changes through ProductService.updateStock(),
+// which also writes a matching InventoryTransaction row so every change is auditable.
 @Entity
 @Table(name = "products")
 @Data
@@ -36,6 +39,7 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 
+    // Auto-stamp created/updated dates so callers never have to set them manually.
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDate.now();

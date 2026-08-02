@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+// Bridge to the Python ML microservice: turns our SQL sales history into the JSON
+// shape /predict expects, then turns its forecasts back into OrderSuggestion rows.
 @Service
 public class PredictionClient {
 
@@ -38,6 +40,8 @@ public class PredictionClient {
         this.mlServiceUrl = mlServiceUrl;
     }
 
+    // One suggestion per product: builds every product's sales history, sends them
+    // all to the ML service in a single call, then merges the forecasts back in.
     public List<OrderSuggestion> getSuggestions() {
         List<Product> products = productRepository.findAll();
         if (products.isEmpty()) {
@@ -78,6 +82,8 @@ public class PredictionClient {
         return suggestions;
     }
 
+    // Collapses raw SALE transactions into one number per calendar day (a product
+    // can have several sale rows on the same day) - that's the shape the ML model expects.
     private MlProductHistory buildHistory(Product product) {
         List<InventoryTransaction> transactions = transactionRepository
                 .findByProduct_IdAndReasonOrderByTransactionDateAsc(product.getId(), InventoryTransaction.Reason.SALE);

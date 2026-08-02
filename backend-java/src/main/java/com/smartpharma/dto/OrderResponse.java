@@ -11,6 +11,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+// What both Manager and Supplier see for an order. Deliberately NOT the Order/OrderItem
+// entities themselves - returning those directly would leak the linked User objects
+// (and their password hashes) into the JSON response.
 public class OrderResponse {
     private Long id;
     private Long supplierId;
